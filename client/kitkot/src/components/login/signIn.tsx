@@ -22,11 +22,11 @@ const style = {
   p: 0,
 };
 
-export default function SignIn() {
+export default function SignIn({ onClose }: { onClose: () => void }) {
   return (
     <Box sx={style}>
       <IconButton sx={{ alignSelf: "flex-end" }}>
-        <CloseIcon />
+        <CloseIcon onClick={onClose} />
       </IconButton>
       <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="bold">
         Log in to KitKot

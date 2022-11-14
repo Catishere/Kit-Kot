@@ -25,6 +25,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddIcon from "@mui/icons-material/Add";
 import { ReactComponent as KitKotLogo } from "../../logo.svg";
 import {
   useUserContextState,
@@ -212,7 +213,7 @@ const UserElements = ({ state }: { state: State<boolean> }) => {
   };
 
   return (
-    <Box id="user-elements" sx={{ flexGrow: 0 }}>
+    <Box id="user-elements" sx={{ flexGrow: 0, flexWrap: "nowrap" }}>
       <Tooltip title="Settings">
         <IconButton sx={{ p: 0 }} onClick={() => state.setState(true)}>
           <Avatar src={user && user.photoURL ? user.photoURL : undefined}>
@@ -228,16 +229,31 @@ const AnonElements = ({ state }: { state: State<boolean> }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <Box>
-      <Button onClick={() => setModalOpen(true)}> Upload </Button>
-      <Button> Log in </Button>
+    <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "5px" }}>
+      <Button
+        onClick={() => setModalOpen(true)}
+        color="neutral"
+        variant="outlined"
+        startIcon={<AddIcon />}
+        sx={{ whiteSpace: "nowrap" }}
+      >
+        Upload
+      </Button>
+      <Button
+        onClick={() => setModalOpen(true)}
+        color="secondary"
+        variant="contained"
+        sx={{ whiteSpace: "nowrap" }}
+      >
+        Log in
+      </Button>
       <Tooltip title="Settings">
         <IconButton sx={{ p: 0 }} onClick={() => state.setState(true)}>
           <MoreVertIcon />
         </IconButton>
       </Tooltip>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <SignIn />
+        <SignIn onClose={() => setModalOpen(false)} />
       </Modal>
     </Box>
   );
