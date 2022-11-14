@@ -57,10 +57,7 @@ export default function Post({ post }: { post: PostData }) {
               {post.authorDisplayName}
             </Typography>
           </Box>
-          <Typography
-            sx={{ display: { xs: "none", sm: "flex" } }}
-            textAlign="left"
-          >
+          <Typography textAlign="left" fontSize={{ xs: 12, sm: 14 }}>
             <Moment fromNow>{post.date}</Moment>
           </Typography>
           <Typography textAlign="left">{post.content}</Typography>
