@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 import { alpha, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -32,6 +32,22 @@ function App() {
 
   const theme = useMemo(() => getTheme(mode), [mode]);
 
+  const mainStyle = {
+    flexGrow: 1,
+    paddingLeft: { xs: "64px", sm: "64px", md: "240px" },
+    marginTop: "65px",
+    backgroundColor: theme.palette.background.default,
+    borderRadius: "10px",
+    overflowY: "auto",
+    listStyle: "none",
+    "&::-webkit-scrollbar": {
+      width: "0.4em",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: alpha(theme.palette.text.primary, 0.1),
+    },
+  };
+
   return (
     <div className="App">
       <ColorModeContext.Provider value={colorMode}>
@@ -39,26 +55,12 @@ function App() {
           <UserContextProvider>
             <BrowserRouter>
               <Navbar />
-              <SideBar />
-              <Box
-                max-width="800px"
-                component="main"
-                sx={{
-                  flexGrow: 1,
-                  paddingLeft: { xs: "64px", sm: "64px", md: "240px" },
-                  marginTop: "65px",
-                  backgroundColor: theme.palette.background.default,
-                  borderRadius: "10px",
-                  overflowY: "auto",
-                  listStyle: "none",
-                  "&::-webkit-scrollbar": {
-                    width: "0.4em",
-                  },
-                  "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: alpha(theme.palette.text.primary, 0.1),
-                  },
-                }}
-              >
+              <Routes>
+                <Route path="/" element={<SideBar />} />
+                <Route path="/following" element={<SideBar />} />
+              </Routes>
+              <Box max-width="800px" component="main" sx={mainStyle}>
+                <CssBaseline />
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/following" element={<Following />} />
