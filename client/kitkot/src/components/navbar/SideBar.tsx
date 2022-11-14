@@ -66,11 +66,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MiniDrawer() {
   const theme = useTheme();
   const [extended, setExtended] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -84,9 +80,6 @@ export default function MiniDrawer({
     setExtended(window.innerWidth > 1000);
 
     window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
   }, []);
 
   const navigations = [
@@ -95,13 +88,20 @@ export default function MiniDrawer({
   ];
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", zIndex: 5 }}>
       <CssBaseline />
       <Drawer
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
+        onTouchStart={() => {
+          setOpen(true);
+          setTimeout(() => {
+            setOpen(false);
+          }, 2000);
+        }}
         variant="permanent"
         open={extended || open}
+        sx={{ position: "fixed" }}
       >
         <DrawerHeader />
         <Divider />
@@ -115,8 +115,8 @@ export default function MiniDrawer({
                   px: 2.5,
                   color:
                     current === nav.name
-                      ? theme.palette.error.light
-                      : theme.palette.text.secondary,
+                      ? theme.palette.secondary.main
+                      : theme.palette.text.primary,
                 }}
                 component={Link}
                 to={nav.link}
@@ -176,7 +176,6 @@ export default function MiniDrawer({
           ))}
         </List>
       </Drawer>
-      {children}
     </Box>
   );
 }

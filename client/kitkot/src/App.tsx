@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { alpha, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -7,6 +7,7 @@ import Navbar from "./components/navbar/Navbar";
 import SideBar from "./components/navbar/SideBar";
 import ColorModeContext from "./contexts/ColorModeContext";
 import { UserContextProvider } from "./contexts/UserContext";
+import getTheme from "./helper/getTheme";
 import { Following } from "./views/Following";
 import { Home } from "./views/Home";
 
@@ -29,37 +30,44 @@ function App() {
     setMode(localMode ? localMode : "light");
   }, []);
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
-    [mode]
-  );
+  const theme = useMemo(() => getTheme(mode), [mode]);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <ColorModeContext.Provider value={colorMode}>
-          <ThemeProvider theme={theme}>
-            <UserContextProvider>
-              <BrowserRouter>
-                <Navbar />
-                <SideBar>
-                  <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/following" element={<Following />} />
-                    </Routes>
-                  </Box>
-                </SideBar>
-              </BrowserRouter>
-            </UserContextProvider>
-          </ThemeProvider>
-        </ColorModeContext.Provider>
-      </header>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <UserContextProvider>
+            <BrowserRouter>
+              <Navbar />
+              <SideBar />
+              <Box
+                max-width="800px"
+                component="main"
+                sx={{
+                  flexGrow: 1,
+                  paddingLeft: { xs: "64px", sm: "64px", md: "240px" },
+                  marginTop: "65px",
+                  backgroundColor: theme.palette.background.default,
+                  borderRadius: "10px",
+                  overflowY: "auto",
+                  listStyle: "none",
+                  "&::-webkit-scrollbar": {
+                    width: "0.4em",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: alpha(theme.palette.text.primary, 0.1),
+                  },
+                }}
+              >
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/following" element={<Following />} />
+                </Routes>
+              </Box>
+            </BrowserRouter>
+          </UserContextProvider>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
     </div>
   );
 }

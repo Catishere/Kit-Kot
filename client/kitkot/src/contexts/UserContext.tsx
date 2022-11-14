@@ -39,10 +39,10 @@ const useUserContextUpdater = () => {
 };
 
 const UserContextProvider = ({ children }: ChildrenProp) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null as UserInfo);
 
-  const signout = useCallback(() => {
-    setUser(null);
+  const setUserState = useCallback((user: UserInfo) => {
+    setUser(user);
   }, []);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const UserContextProvider = ({ children }: ChildrenProp) => {
 
   return (
     <UserContextState.Provider value={user}>
-      <UserContextUpdater.Provider value={signout}>
+      <UserContextUpdater.Provider value={setUserState}>
         {children}
       </UserContextUpdater.Provider>
     </UserContextState.Provider>

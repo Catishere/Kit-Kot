@@ -3,11 +3,13 @@ import { createTheme, PaletteMode } from "@mui/material";
 declare module "@mui/material/styles" {
   interface Palette {
     neutral: Palette["primary"];
+    modal?: Palette["primary"];
   }
 
   // allow configuration using `createTheme`
   interface PaletteOptions {
     neutral?: PaletteOptions["primary"];
+    modal?: PaletteOptions["primary"];
   }
 }
 
@@ -27,6 +29,9 @@ const getTheme = (mode: PaletteMode) => {
       },
       secondary: {
         main: "#ff3b5c",
+      },
+      modal: {
+        main: mode === "light" ? "#fff" : "#232323",
       },
     },
     typography: {
