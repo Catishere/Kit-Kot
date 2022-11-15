@@ -7,7 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
-@Entity(name="users")
+@Entity(name="user")
 @Getter
 @Setter
 @ToString
