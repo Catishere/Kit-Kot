@@ -1,5 +1,6 @@
 package com.cat.tu.config;
 
+import com.cat.tu.filter.JWTFilter;
 import com.cat.tu.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
@@ -19,6 +21,12 @@ public class SecurityConfig {
 
     @Value("${spring.security.debug:false}")
     boolean securityDebug;
+
+    private final JWTFilter jwtFilter;
+
+    SecurityConfig(JWTFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -29,19 +37,17 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET ,"/api/admin/**").hasRole("ADMIN")
                 .antMatchers("*").hasAnyRole().anyRequest().permitAll()
             .and()
-                .httpBasic()
-            .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http,
                                              BCryptPasswordEncoder bCryptPasswordEncoder,
-                                             UserService userService)
-            throws Exception {
+                                             UserService userService) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userService)
                 .passwordEncoder(bCryptPasswordEncoder)
