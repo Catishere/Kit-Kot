@@ -43,3 +43,13 @@ export interface UserData {
   email: string;
   role: string;
 }
+
+export interface ModalProps {
+  value: string;
+  onClose: () => void;
+  changeView: (value: string) => void;
+}
+
+export interface OnClose {
+  onClose: () => void;
+}

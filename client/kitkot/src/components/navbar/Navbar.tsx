@@ -32,7 +32,7 @@ import {
   useUserContextUpdater,
 } from "../../contexts/UserContext";
 import { MenuOptions, State } from "../../types/types.interface";
-import SignIn from "../login/SignIn";
+import LoginModalContent from "../login/LoginModalContent";
 
 export default function Navbar() {
   const user = useUserContextState();
@@ -253,7 +253,7 @@ const AnonElements = ({ state }: { state: State<boolean> }) => {
         </IconButton>
       </Tooltip>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <SignIn onClose={() => setModalOpen(false)} />
+        <LoginModalContent onClose={() => setModalOpen(false)} />
       </Modal>
     </Box>
   );
