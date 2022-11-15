@@ -28,6 +28,11 @@ public class UserController {
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
+    @GetMapping("/suggested")
+    public ResponseEntity<Iterable<User>> getSuggestedUsers() {
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         if (id == null || id < 0)

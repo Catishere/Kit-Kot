@@ -16,6 +16,8 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { UserData } from "../../types/types.interface";
+import { Avatar, Typography } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -71,6 +73,7 @@ export default function MiniDrawer() {
   const [extended, setExtended] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [current, setCurrent] = React.useState("Home");
+  const [suggestedUsers, setSuggestedUsers] = React.useState<UserData[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,6 +83,13 @@ export default function MiniDrawer() {
     setExtended(window.innerWidth > 1000);
 
     window.addEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/user/suggested")
+      .then((res) => res.json())
+      .then((data) => setSuggestedUsers(data))
+      .catch((err) => console.log(err));
   }, []);
 
   const navigations = [
@@ -148,14 +158,29 @@ export default function MiniDrawer() {
           ))}
         </List>
         <Divider />
+        <Typography
+          sx={{
+            marginTop: "10px",
+            display: extended || open ? "block" : "none",
+          }}
+          fontSize={12}
+          fontWeight="bold"
+          color="text.secondary"
+        >
+          Suggested accounts
+        </Typography>
         <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+          {suggestedUsers.map((user, index) => (
+            <ListItem
+              key={user.username + index}
+              disablePadding
+              sx={{ display: "flex" }}
+            >
               <ListItemButton
                 sx={{
-                  minHeight: 48,
                   justifyContent: extended || open ? "initial" : "center",
                   px: 2.5,
+                  py: 0,
                 }}
               >
                 <ListItemIcon
@@ -165,10 +190,21 @@ export default function MiniDrawer() {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <Avatar
+                    alt={user.displayName}
+                    src={process.env.PUBLIC_URL + user.photoURL}
+                    sx={{ width: 32, height: 32 }}
+                  />
                 </ListItemIcon>
                 <ListItemText
-                  primary={text}
+                  primary={
+                    <Box display={"flex"} flexDirection="column">
+                      <Typography fontWeight="bold" fontSize={15}>
+                        {user.username}
+                      </Typography>
+                      <Typography fontSize={12}>{user.displayName}</Typography>
+                    </Box>
+                  }
                   sx={{ opacity: extended || open ? 1 : 0 }}
                 />
               </ListItemButton>

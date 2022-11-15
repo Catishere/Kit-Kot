@@ -15,7 +15,6 @@ export default function Post({ post }: { post: PostData }) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        marginRight: "10px",
         p: "20px 0px 20px 0px",
         height: { xs: "auto", sm: "600px" },
         width: { xs: "calc(100% - 10px)", sm: "100%" },
