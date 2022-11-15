@@ -21,6 +21,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.31'
     compileOnly 'org.projectlombok:lombok'
