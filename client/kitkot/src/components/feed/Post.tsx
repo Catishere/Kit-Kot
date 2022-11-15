@@ -1,4 +1,11 @@
-import { Avatar, Box, Button, Container, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Link,
+  Typography,
+} from "@mui/material";
 import { PostData } from "../../types/types.interface";
 import Moment from "react-moment";
 
@@ -47,18 +54,28 @@ export default function Post({ post }: { post: PostData }) {
               textAlign="left"
               marginRight="4px"
             >
-              {post.authorUsername}
+              {post.user.username}
             </Typography>
             <Typography
               whiteSpace="nowrap"
               fontSize={{ xs: 12, sm: 14 }}
               textAlign="left"
             >
-              {post.authorDisplayName}
+              {post.user.displayName}
             </Typography>
           </Box>
           <Typography textAlign="left" fontSize={{ xs: 12, sm: 14 }}>
             <Moment fromNow>{post.date}</Moment>
+          </Typography>
+          <Typography fontSize={12} fontWeight={"bold"} textAlign="left">
+            {post.tags.map((tag) => (
+              <>
+                <Link component="button" underline="hover">
+                  #{tag}
+                </Link>
+                &nbsp;
+              </>
+            ))}
           </Typography>
           <Typography textAlign="left">{post.content}</Typography>
         </Box>
@@ -80,7 +97,7 @@ export default function Post({ post }: { post: PostData }) {
         width={{ xs: "100%", sm: "475px" }}
       >
         <img
-          src={process.env.PUBLIC_URL + post.media}
+          src={process.env.PUBLIC_URL + post.mediaUrl}
           alt="fuck this shit"
           width="100%"
           height="auto"

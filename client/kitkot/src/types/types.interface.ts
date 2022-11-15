@@ -24,8 +24,7 @@ export interface State<T> {
 
 export interface PostData {
   id: number;
-  authorUsername: string;
-  authorDisplayName: string;
+  user: UserData;
   date: Date;
   tags: string[];
   music: {
@@ -33,5 +32,14 @@ export interface PostData {
     link: string;
   };
   content: string;
-  media: string;
+  mediaUrl: string;
+}
+
+export interface UserData {
+  id: number;
+  username: string;
+  displayName: string;
+  photoURL: string;
+  email: string;
+  role: string;
 }
