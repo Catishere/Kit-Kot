@@ -13,6 +13,12 @@ declare module "@mui/material/styles" {
   }
 }
 
+declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    xxs: true;
+  }
+}
+
 // Update the Button's color prop options
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
@@ -37,6 +43,16 @@ const getTheme = (mode: PaletteMode) => {
     typography: {
       fontFamily:
         "Segoe UI, Frutiger, Dejavu Sans, Helvetica Neue, Arial, sans-serif",
+    },
+    breakpoints: {
+      values: {
+        xxs: 0,
+        xs: 400,
+        sm: 600,
+        md: 900,
+        lg: 1200,
+        xl: 1536,
+      },
     },
   });
 };

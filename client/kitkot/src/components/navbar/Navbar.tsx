@@ -108,7 +108,7 @@ export default function Navbar() {
             KitKot
           </Typography>
         </Box>
-        <Box display={{ xs: "none", sm: "flex" }}>
+        <Box display={{ xxs: "none", sm: "flex" }}>
           <SearchBar />
         </Box>
         <Box>
@@ -230,23 +230,27 @@ const AnonElements = ({ state }: { state: State<boolean> }) => {
 
   return (
     <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "5px" }}>
-      <Button
-        onClick={() => setModalOpen(true)}
-        color="neutral"
-        variant="outlined"
-        startIcon={<AddIcon />}
-        sx={{ whiteSpace: "nowrap" }}
-      >
-        Upload
-      </Button>
-      <Button
-        onClick={() => setModalOpen(true)}
-        color="secondary"
-        variant="contained"
-        sx={{ whiteSpace: "nowrap" }}
-      >
-        Log in
-      </Button>
+      <Box display={{ xxs: "none", xs: "flex" }}>
+        <Button
+          onClick={() => setModalOpen(true)}
+          color="neutral"
+          variant="outlined"
+          startIcon={<AddIcon />}
+          sx={{ whiteSpace: "nowrap" }}
+        >
+          Upload
+        </Button>
+      </Box>
+      <Box display={{ xxs: "none", xs: "flex" }}>
+        <Button
+          onClick={() => setModalOpen(true)}
+          color="secondary"
+          variant="contained"
+          sx={{ whiteSpace: "nowrap" }}
+        >
+          Log in
+        </Button>
+      </Box>
       <Tooltip title="Settings">
         <IconButton sx={{ p: 0 }} onClick={() => state.setState(true)}>
           <MoreVertIcon />

@@ -16,8 +16,8 @@ export default function Post({ post }: { post: PostData }) {
         display: "flex",
         flexDirection: "column",
         p: "20px 0px 20px 0px",
-        height: { xs: "auto", sm: "600px" },
-        width: { xs: "calc(100% - 10px)", sm: "100%" },
+        height: { xxs: "auto", sm: "600px" },
+        width: { xxs: "calc(100% - 10px)", sm: "100%" },
       }}
     >
       <Box
@@ -31,8 +31,8 @@ export default function Post({ post }: { post: PostData }) {
         <Box>
           <Avatar
             sx={{
-              width: { xs: 40, sm: 56 },
-              height: { xs: 40, sm: 56 },
+              width: { xxs: 40, sm: 56 },
+              height: { xxs: 40, sm: 56 },
               zIndex: 1,
             }}
           />
@@ -49,7 +49,7 @@ export default function Post({ post }: { post: PostData }) {
           >
             <Typography
               fontWeight="bold"
-              fontSize={{ xs: 14, sm: 18 }}
+              fontSize={{ xxs: 14, sm: 18 }}
               textAlign="left"
               marginRight="4px"
             >
@@ -57,13 +57,13 @@ export default function Post({ post }: { post: PostData }) {
             </Typography>
             <Typography
               whiteSpace="nowrap"
-              fontSize={{ xs: 12, sm: 14 }}
+              fontSize={{ xxs: 12, sm: 14 }}
               textAlign="left"
             >
               {post.user.displayName}
             </Typography>
           </Box>
-          <Typography textAlign="left" fontSize={{ xs: 12, sm: 14 }}>
+          <Typography textAlign="left" fontSize={{ xxs: 12, sm: 14 }}>
             <Moment fromNow>{post.date}</Moment>
           </Typography>
           <Typography fontSize={12} fontWeight={"bold"} textAlign="left">
@@ -92,8 +92,8 @@ export default function Post({ post }: { post: PostData }) {
       <Box
         display="flex"
         justifyContent="flex-start"
-        height={{ xs: "auto", sm: "475px" }}
-        width={{ xs: "100%", sm: "475px" }}
+        height={{ xxs: "auto", sm: "475px" }}
+        width={{ xxs: "100%", sm: "475px" }}
       >
         <img
           src={process.env.PUBLIC_URL + post.mediaUrl}

@@ -34,7 +34,7 @@ function App() {
 
   const mainStyle = {
     flexGrow: 1,
-    paddingLeft: { xs: "64px", sm: "64px", md: "240px" },
+    paddingLeft: { xxs: "64px", md: "240px" },
     marginTop: "65px",
     backgroundColor: theme.palette.background.default,
     borderRadius: "10px",

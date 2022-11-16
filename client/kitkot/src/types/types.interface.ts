@@ -46,10 +46,39 @@ export interface UserData {
 
 export interface ModalProps {
   value: string;
-  onClose: () => void;
   changeView: (value: string) => void;
 }
 
 export interface OnClose {
   onClose: () => void;
+}
+
+export type Month =
+  | "January"
+  | "February"
+  | "March"
+  | "April"
+  | "May"
+  | "June"
+  | "July"
+  | "August"
+  | "September"
+  | "October"
+  | "November"
+  | "December";
+
+export interface RegisterForm {
+  username?: string;
+  password?: string;
+  day?: string;
+  month?: string;
+  year?: string;
+}
+
+export interface RegisterFormData {
+  username?: string;
+  password?: string;
+  day?: number;
+  month: Month;
+  year?: number;
 }
