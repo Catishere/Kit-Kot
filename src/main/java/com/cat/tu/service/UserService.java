@@ -24,6 +24,13 @@ public class UserService implements UserDetailsService {
         return user.orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    public Optional<User> saveUser(User user) {
+        if (getUser(user.getUsername()).isEmpty())
+            return Optional.of(userRepository.save(user));
+        else
+            return Optional.empty();
+    }
+
     public Optional<User> getUser(String username) {
         return userRepository.findUserByUsername(username);
     }
