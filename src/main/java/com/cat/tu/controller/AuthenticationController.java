@@ -54,8 +54,9 @@ public class AuthenticationController {
             authManager.authenticate(authInputToken);
 
             String token = jwtUtil.generateToken(loginData.getUsername());
+            User user = userService.getUser(loginData.getUsername()).get();
 
-            return new ResponseEntity<>(new JWTResponse(token), HttpStatus.OK);
+            return new ResponseEntity<>(new JWTResponse(token, user), HttpStatus.OK);
         } catch (AuthenticationException authExc){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
