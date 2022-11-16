@@ -22,7 +22,7 @@ export function Home() {
       {feed.map((post: PostData, index: number) => (
         <>
           <Post key={post.id} post={post} />
-          {index !== feed.length - 1 ? <Divider /> : null}
+          {index !== feed.length - 1 ? <Divider variant="middle" /> : null}
         </>
       ))}
     </Box>

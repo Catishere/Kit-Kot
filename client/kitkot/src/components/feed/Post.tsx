@@ -14,15 +14,16 @@ export default function Post({ post }: { post: PostData }) {
     <Container
       sx={{
         display: "flex",
+        alignItems: "center",
         flexDirection: "column",
         p: "20px 0px 20px 0px",
-        height: { xxs: "auto", sm: "600px" },
         width: { xxs: "calc(100% - 10px)", sm: "100%" },
       }}
     >
       <Box
         sx={{
           width: "100%",
+          maxWidth: "500px",
           display: "flex",
           flexDirection: "row",
           justifyContent: "flex-start",
@@ -76,9 +77,8 @@ export default function Post({ post }: { post: PostData }) {
               </>
             ))}
           </Typography>
-          <Typography textAlign="left">{post.content}</Typography>
         </Box>
-        <Box justifySelf="flex-end" flexGrow={1}>
+        <Box sx={{ marginLeft: "auto", alignSelf: "center" }}>
           <Button
             variant="outlined"
             color="secondary"
@@ -88,10 +88,30 @@ export default function Post({ post }: { post: PostData }) {
           </Button>
         </Box>
       </Box>
-
+      <Box sx={{ width: { xxs: "100%", sm: "475px" } }}>
+        {post.content.length > 128 ? (
+          <Typography textAlign="justify">
+            {post.content.substring(0, 128) + "..."}
+            <Link
+              onClick={(e) => {
+                const target = (e.target as HTMLElement).parentElement;
+                if (target) target.innerText = post.content;
+              }}
+              fontWeight="bold"
+              color="primary.light"
+              component="button"
+              underline="hover"
+            >
+              See more
+            </Link>
+          </Typography>
+        ) : (
+          <Typography textAlign="justify">{post.content}</Typography>
+        )}
+      </Box>
       <Box
         display="flex"
-        justifyContent="flex-start"
+        marginTop="10px"
         height={{ xxs: "auto", sm: "475px" }}
         width={{ xxs: "100%", sm: "475px" }}
       >

@@ -34,6 +34,7 @@ function App() {
 
   const mainStyle = {
     flexGrow: 1,
+    width: "100%",
     paddingLeft: { xxs: "64px", md: "240px" },
     marginTop: "65px",
     backgroundColor: theme.palette.background.default,
@@ -59,7 +60,7 @@ function App() {
                 <Route path="/" element={<SideBar />} />
                 <Route path="/following" element={<SideBar />} />
               </Routes>
-              <Box max-width="800px" component="main" sx={mainStyle}>
+              <Box component="main" sx={mainStyle}>
                 <CssBaseline />
                 <Routes>
                   <Route path="/" element={<Home />} />
