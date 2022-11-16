@@ -45,6 +45,7 @@ export default function Navbar() {
   useEffect(() => {
     const logout = () => {
       localStorage.removeItem("userInfo");
+      localStorage.removeItem("token");
       setUser(null);
     };
 
