@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { Alert, Box, TextField, Typography } from "@mui/material";
+import { Alert, Box, Collapse, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useUserContextUpdater } from "../../contexts/UserContext";
 import headers from "../../helper/headers";
@@ -70,13 +70,16 @@ export default function SignIn({ value }: ModalProps) {
         paddingX: 6,
       }}
     >
-      <Alert
-        onClose={() => setError(null)}
-        sx={{ display: error ? "flex" : "none" }}
-        severity="error"
-      >
-        {error}
-      </Alert>
+      <Collapse in={error !== null}>
+        <Alert
+          onClose={() => setError(null)}
+          sx={{ display: error ? "flex" : "none" }}
+          severity="error"
+        >
+          {error}
+        </Alert>
+      </Collapse>
+
       <Typography sx={{ marginBottom: "20px" }} fontSize={18} fontWeight="bold">
         Sign In
       </Typography>
