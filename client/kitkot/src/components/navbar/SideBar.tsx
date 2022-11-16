@@ -14,9 +14,9 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { UserData } from "../../types/types.interface";
 import { Avatar, Typography } from "@mui/material";
 import headers from "../../helper/headers";
+import { UserInfo } from "../../types/types.interface";
 
 const drawerWidth = 240;
 
@@ -72,7 +72,7 @@ export default function MiniDrawer() {
   const [extended, setExtended] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [current, setCurrent] = React.useState("Home");
-  const [suggestedUsers, setSuggestedUsers] = React.useState<UserData[]>([]);
+  const [suggestedUsers, setSuggestedUsers] = React.useState<UserInfo[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -173,11 +173,7 @@ export default function MiniDrawer() {
         </Typography>
         <List>
           {suggestedUsers.map((user, index) => (
-            <ListItem
-              key={user.username + index}
-              disablePadding
-              sx={{ display: "flex" }}
-            >
+            <ListItem key={index} disablePadding sx={{ display: "flex" }}>
               <ListItemButton
                 sx={{
                   justifyContent: extended || open ? "initial" : "center",
@@ -193,8 +189,8 @@ export default function MiniDrawer() {
                   }}
                 >
                   <Avatar
-                    alt={user.displayName}
-                    src={process.env.PUBLIC_URL + user.photoURL}
+                    alt={user?.displayName}
+                    src={process.env.PUBLIC_URL + user?.photoURL}
                     sx={{ width: 32, height: 32 }}
                   />
                 </ListItemIcon>
@@ -202,9 +198,9 @@ export default function MiniDrawer() {
                   primary={
                     <Box display={"flex"} flexDirection="column">
                       <Typography fontWeight="bold" fontSize={15}>
-                        {user.username}
+                        {user?.username}
                       </Typography>
-                      <Typography fontSize={12}>{user.displayName}</Typography>
+                      <Typography fontSize={12}>{user?.displayName}</Typography>
                     </Box>
                   }
                   sx={{ opacity: extended || open ? 1 : 0 }}

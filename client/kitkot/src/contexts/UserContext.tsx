@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import headers from "../helper/headers";
-import { UserInfo } from "../types";
+import { UserInfo } from "../types/types.interface";
 import { ChildrenProp } from "../types/types.interface";
 
 // create contexts
@@ -63,8 +63,9 @@ const UserContextProvider = ({ children }: ChildrenProp) => {
         }
       })
       .then((data) => {
-        setUser(data);
-        localStorage.setItem("userInfo", JSON.stringify(data));
+        const userInfo = { ...data.user, followingData: data.followingData };
+        setUser(userInfo);
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
       })
       .catch((err) => {
         console.log(err);

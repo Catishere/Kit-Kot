@@ -8,8 +8,19 @@ import {
 } from "@mui/material";
 import { PostData } from "../../types/types.interface";
 import Moment from "react-moment";
+import { useUserContextState } from "../../contexts/UserContext";
 
 export default function Post({ post }: { post: PostData }) {
+  const user = useUserContextState();
+
+  const isFollowed = user?.followingData?.following?.some(
+    (user) => user?.username === post.user?.username
+  );
+
+  const canFollowBack = user?.followingData?.followers?.some(
+    (user) => user?.username === post.user?.username
+  );
+
   return (
     <Container
       sx={{
@@ -54,14 +65,14 @@ export default function Post({ post }: { post: PostData }) {
               textAlign="left"
               marginRight="4px"
             >
-              {post.user.username}
+              {post.user?.username}
             </Typography>
             <Typography
               whiteSpace="nowrap"
               fontSize={{ xxs: 12, sm: 14 }}
               textAlign="left"
             >
-              {post.user.displayName}
+              {post.user?.displayName}
             </Typography>
           </Box>
           <Typography textAlign="left" fontSize={{ xxs: 12, sm: 14 }}>
@@ -80,11 +91,17 @@ export default function Post({ post }: { post: PostData }) {
         </Box>
         <Box sx={{ marginLeft: "auto", alignSelf: "center" }}>
           <Button
-            variant="outlined"
+            variant={isFollowed ? "outlined" : "contained"}
             color="secondary"
             sx={{ textTransform: "none" }}
           >
-            <b>Follow</b>
+            <b>
+              {isFollowed
+                ? "Unfollow"
+                : canFollowBack
+                ? "Follow Back"
+                : "Follow"}
+            </b>
           </Button>
         </Box>
       </Box>

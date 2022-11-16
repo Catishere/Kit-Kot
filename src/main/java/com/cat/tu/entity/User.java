@@ -23,7 +23,9 @@ import java.util.List;
     "accountNonExpired",
     "accountNonLocked",
     "credentialsNonExpired",
-    "enabled"})
+    "enabled",
+    "followers",
+    "following"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -46,6 +48,22 @@ public class User implements UserDetails {
 
     @Column(name="role")
     private String role;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_following",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
+    private List<User> following;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_following",
+            joinColumns = @JoinColumn(name = "following_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> followers;
 
     public User() {
     }

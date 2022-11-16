@@ -3,7 +3,8 @@ package com.cat.tu.controller;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
 import com.cat.tu.util.JWTUtil;
-import com.cat.tu.util.model.JWTResponse;
+import com.cat.tu.util.model.FollowingData;
+import com.cat.tu.util.model.UserDataLoginDTO;
 import com.cat.tu.util.model.UserLoginData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,16 +38,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JWTResponse> getDefault(@RequestBody UserLoginData loginData) {
+    public HttpStatus getDefault(@RequestBody UserLoginData loginData) {
         User user = new User(loginData.getUsername(), passwordEncoder.encode(loginData.getPassword()), "ROLE_USER");
         if (userService.saveUser(user).isPresent())
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return HttpStatus.CREATED;
         else
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return HttpStatus.CONFLICT;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JWTResponse> loginHandler(@RequestBody UserLoginData loginData){
+    public ResponseEntity<UserDataLoginDTO> loginHandler(@RequestBody UserLoginData loginData){
         try {
             UsernamePasswordAuthenticationToken authInputToken =
                     new UsernamePasswordAuthenticationToken(loginData.getUsername(), loginData.getPassword());
@@ -56,7 +57,8 @@ public class AuthenticationController {
             String token = jwtUtil.generateToken(loginData.getUsername());
             User user = userService.getUser(loginData.getUsername()).get();
 
-            return new ResponseEntity<>(new JWTResponse(token, user), HttpStatus.OK);
+            return new ResponseEntity<>(new UserDataLoginDTO(user,
+                    new FollowingData(user.getFollowing(), user.getFollowers()), token), HttpStatus.OK);
         } catch (AuthenticationException authExc){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

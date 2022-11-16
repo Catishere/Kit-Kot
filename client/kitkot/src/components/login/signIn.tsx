@@ -3,7 +3,7 @@ import { Alert, Box, Collapse, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useUserContextUpdater } from "../../contexts/UserContext";
 import headers from "../../helper/headers";
-import { UserInfo } from "../../types";
+import { FollowingData, UserInfo } from "../../types/types.interface";
 import { LoginFormData, ModalProps } from "../../types/types.interface";
 
 export default function SignIn({ value }: ModalProps) {
@@ -44,15 +44,25 @@ export default function SignIn({ value }: ModalProps) {
           throw new Error("Wrong credentials");
         }
       })
-      .then((data: { jwtToken: string; user: UserInfo }) => {
-        console.log(data);
-        if (data.jwtToken) {
-          localStorage.setItem("token", data.jwtToken);
-          localStorage.setItem("userInfo", JSON.stringify(data.user));
-          userContextUpdater(data.user);
+      .then(
+        (data: {
+          jwtToken: string;
+          user: UserInfo;
+          followingData: FollowingData;
+        }) => {
+          const userInfo = {
+            ...data.user,
+            followingData: data.followingData,
+          } as UserInfo;
+
+          if (data.jwtToken) {
+            localStorage.setItem("token", data.jwtToken);
+            localStorage.setItem("userInfo", JSON.stringify(userInfo));
+            userContextUpdater(userInfo);
+          }
+          setLoading(false);
         }
-        setLoading(false);
-      })
+      )
       .catch((err) => {
         console.log(err);
         setLoading(false);

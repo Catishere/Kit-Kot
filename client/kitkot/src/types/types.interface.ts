@@ -24,7 +24,7 @@ export interface State<T> {
 
 export interface PostData {
   id: number;
-  user: UserData;
+  user: UserInfo;
   date: Date;
   tags: string[];
   music: {
@@ -35,14 +35,19 @@ export interface PostData {
   mediaUrl: string;
 }
 
-export interface UserData {
+export interface FollowingData {
+  following: UserInfo[];
+  followers: UserInfo[];
+}
+
+export type UserInfo = {
   id: number;
   username: string;
   displayName: string;
-  photoURL: string;
   email: string;
-  role: string;
-}
+  photoURL: string;
+  followingData: FollowingData;
+} | null;
 
 export interface ModalProps {
   value: string;
