@@ -51,6 +51,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @PostMapping("/{user_id}/follow/{followed_id}")
+    public ResponseEntity<User> followUser(@PathVariable Long user_id, @PathVariable Long followed_id) {
+        try {
+            User user = this.userService.followUser(user_id, followed_id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/{id}/following")
     public ResponseEntity<FollowingData> getFollowing(@PathVariable Long id) {
         if (id == null || id < 0)

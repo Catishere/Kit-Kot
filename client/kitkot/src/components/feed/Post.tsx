@@ -1,17 +1,15 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Link,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Container, Link, Typography } from "@mui/material";
 import { PostData } from "../../types/types.interface";
 import Moment from "react-moment";
 import { useUserContextState } from "../../contexts/UserContext";
+import headers from "../../helper/headers";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 
 export default function Post({ post }: { post: PostData }) {
   const user = useUserContextState();
+
+  const [loading, setLoading] = useState(false);
 
   const isFollowed = user?.followingData?.following?.some(
     (user) => user?.username === post.user?.username
@@ -90,10 +88,34 @@ export default function Post({ post }: { post: PostData }) {
           </Typography>
         </Box>
         <Box sx={{ marginLeft: "auto", alignSelf: "center" }}>
-          <Button
+          <LoadingButton
+            loading={loading}
             variant={isFollowed ? "outlined" : "contained"}
             color="secondary"
-            sx={{ textTransform: "none" }}
+            sx={{
+              textTransform: "none",
+              display: user?.id === post.user?.id ? "none" : "flex",
+            }}
+            onClick={() => {
+              setLoading(true);
+              fetch(`/api/user/${user?.id}/follow/${post.user?.id}`, {
+                method: "POST",
+                headers,
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  const i = user?.followingData.following.findIndex(
+                    (follow) => follow?.id === data.id
+                  ) as number;
+                  if (i >= 0) user?.followingData.following.splice(i, 1);
+                  else user?.followingData.following.push(data);
+                  setLoading(false);
+                })
+                .catch((err) => {
+                  console.log(err);
+                  setLoading(false);
+                });
+            }}
           >
             <b>
               {isFollowed
@@ -102,7 +124,7 @@ export default function Post({ post }: { post: PostData }) {
                 ? "Follow Back"
                 : "Follow"}
             </b>
-          </Button>
+          </LoadingButton>
         </Box>
       </Box>
       <Box sx={{ width: { xxs: "100%", sm: "475px" } }}>

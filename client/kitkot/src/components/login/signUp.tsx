@@ -89,7 +89,7 @@ export default function SignUp({ value }: ModalProps) {
   const hasError = Object.values(error).some((e) => e !== undefined);
 
   const sendForm = () => {
-    fetch("http://localhost:3000/api/auth/register", {
+    fetch("/api/auth/register", {
       method: "POST",
       headers,
       body: JSON.stringify(form),

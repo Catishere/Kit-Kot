@@ -85,7 +85,7 @@ export default function MiniDrawer() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/user/suggested", {
+    fetch("/api/user/suggested", {
       method: "GET",
       headers,
     })

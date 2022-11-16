@@ -51,7 +51,7 @@ const UserContextProvider = ({ children }: ChildrenProp) => {
     if (!userJson) return;
     const userObject = JSON.parse(userJson);
     setUser(userObject);
-    fetch(`http://localhost:3000/api/user/${userObject.id}`, {
+    fetch(`/api/user/${userObject.id}`, {
       method: "GET",
       headers,
     })

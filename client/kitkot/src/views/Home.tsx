@@ -8,7 +8,7 @@ export function Home() {
   const [feed, setFeed] = useState<PostData[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/post/trending", {
+    fetch("/api/post/trending", {
       method: "GET",
       headers,
     })
