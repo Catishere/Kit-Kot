@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import headers from "../helper/headers";
 import { UserInfo } from "../types";
 import { ChildrenProp } from "../types/types.interface";
 
@@ -50,7 +51,10 @@ const UserContextProvider = ({ children }: ChildrenProp) => {
     if (!userJson) return;
     const userObject = JSON.parse(userJson);
     setUser(userObject);
-    fetch(`http://localhost:3000/api/user/${userObject.id}`)
+    fetch(`http://localhost:3000/api/user/${userObject.id}`, {
+      method: "GET",
+      headers,
+    })
       .then((res) => {
         if (res.status === 200) {
           return res.json();

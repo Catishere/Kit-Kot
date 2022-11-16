@@ -82,3 +82,8 @@ export interface RegisterFormData {
   month: Month;
   year?: number;
 }
+
+export interface LoginFormData {
+  username: string;
+  password: string;
+}

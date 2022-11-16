@@ -1,5 +1,6 @@
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import headers from "../../helper/headers";
 import {
   ModalProps,
   Month,
@@ -90,7 +91,7 @@ export default function SignUp({ value }: ModalProps) {
   const sendForm = () => {
     fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(form),
     })
       .then((res) => res.json())
