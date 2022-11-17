@@ -1,4 +1,4 @@
-package com.cat.tu.util.model;
+package com.cat.tu.dto;
 
 import com.cat.tu.entity.User;
 import lombok.AllArgsConstructor;

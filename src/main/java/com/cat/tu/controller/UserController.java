@@ -2,8 +2,8 @@ package com.cat.tu.controller;
 
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
-import com.cat.tu.util.model.FollowingData;
-import com.cat.tu.util.model.UserDataDTO;
+import com.cat.tu.dto.FollowingData;
+import com.cat.tu.dto.UserData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +36,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDataDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserData> getUserById(@PathVariable Long id) {
         if (id == null || id < 0)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return this.userService.getUserById(id)
                 .map(user ->
-                    new ResponseEntity<>(new UserDataDTO(user,
+                    new ResponseEntity<>(new UserData(user,
                             new FollowingData(user.getFollowing(), user.getFollowers())), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

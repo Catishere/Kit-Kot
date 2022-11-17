@@ -1,4 +1,4 @@
-package com.cat.tu.util.model;
+package com.cat.tu.dto;
 
 import com.cat.tu.entity.User;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDataDTO {
+public class UserData {
     protected User user;
     protected FollowingData followingData;
 }

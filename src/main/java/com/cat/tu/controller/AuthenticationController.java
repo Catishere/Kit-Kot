@@ -3,9 +3,9 @@ package com.cat.tu.controller;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
 import com.cat.tu.util.JWTUtil;
-import com.cat.tu.util.model.FollowingData;
-import com.cat.tu.util.model.UserDataLoginDTO;
-import com.cat.tu.util.model.UserLoginData;
+import com.cat.tu.dto.FollowingData;
+import com.cat.tu.dto.UserDataLogin;
+import com.cat.tu.dto.UserLoginData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,7 +47,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDataLoginDTO> loginHandler(@RequestBody UserLoginData loginData){
+    public ResponseEntity<UserDataLogin> loginHandler(@RequestBody UserLoginData loginData){
         try {
             UsernamePasswordAuthenticationToken authInputToken =
                     new UsernamePasswordAuthenticationToken(loginData.getUsername(), loginData.getPassword());
@@ -57,7 +57,7 @@ public class AuthenticationController {
             String token = jwtUtil.generateToken(loginData.getUsername());
             User user = userService.getUser(loginData.getUsername()).get();
 
-            return new ResponseEntity<>(new UserDataLoginDTO(user,
+            return new ResponseEntity<>(new UserDataLogin(user,
                     new FollowingData(user.getFollowing(), user.getFollowers()), token), HttpStatus.OK);
         } catch (AuthenticationException authExc){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

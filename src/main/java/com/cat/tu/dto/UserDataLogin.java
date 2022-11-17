@@ -1,4 +1,4 @@
-package com.cat.tu.util.model;
+package com.cat.tu.dto;
 
 import com.cat.tu.entity.User;
 import lombok.Getter;
@@ -6,13 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDataLoginDTO extends UserDataDTO {
+public class UserDataLogin extends UserData {
     private String jwtToken;
 
-    public UserDataLoginDTO() {
+    public UserDataLogin() {
     }
 
-    public UserDataLoginDTO(User user, FollowingData followingData, String jwtToken) {
+    public UserDataLogin(User user, FollowingData followingData, String jwtToken) {
         super(user, followingData);
         this.jwtToken = jwtToken;
     }
