@@ -10,6 +10,7 @@ import { UserContextProvider } from "./contexts/UserContext";
 import getTheme from "./helper/getTheme";
 import { Following } from "./views/Following";
 import { Home } from "./views/Home";
+import { Upload } from "./views/Upload";
 
 function App() {
   const [mode, setMode] = useState<"light" | "dark">("light");
@@ -59,12 +60,14 @@ function App() {
               <Routes>
                 <Route path="/" element={<SideBar />} />
                 <Route path="/following" element={<SideBar />} />
+                <Route path="/upload" element={<SideBar />} />
               </Routes>
               <Box component="main" sx={mainStyle}>
                 <CssBaseline />
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/following" element={<Following />} />
+                  <Route path="/upload" element={<Upload />} />
                 </Routes>
               </Box>
             </BrowserRouter>

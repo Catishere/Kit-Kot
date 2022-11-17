@@ -33,6 +33,7 @@ import {
 } from "../../contexts/UserContext";
 import { MenuOptions, State } from "../../types/types.interface";
 import LoginModalContent from "../login/LoginModalContent";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const user = useUserContextState();
@@ -186,10 +187,6 @@ const DropDownMenu = ({
 const UserElements = ({ state }: { state: State<boolean> }) => {
   const user = useUserContextState();
 
-  useEffect(() => {
-    console.log("asd");
-  }, []);
-
   const getDisplayNameInitials = () => {
     const tempUser =
       user == null
@@ -214,14 +211,30 @@ const UserElements = ({ state }: { state: State<boolean> }) => {
   };
 
   return (
-    <Box id="user-elements" sx={{ flexGrow: 0, flexWrap: "nowrap" }}>
-      <Tooltip title="Settings">
-        <IconButton sx={{ p: 0 }} onClick={() => state.setState(true)}>
-          <Avatar src={user && user.photoURL ? user.photoURL : undefined}>
-            {getDisplayNameInitials()}
-          </Avatar>
-        </IconButton>
-      </Tooltip>
+    <Box
+      id="user-elements"
+      sx={{ display: "flex", flexWrap: "nowrap", flexDirection: "row", gap: 1 }}
+    >
+      <Box display={{ xxs: "none", xs: "flex" }}>
+        <Button
+          component={Link}
+          to="/upload"
+          color="neutral"
+          variant="outlined"
+          startIcon={<AddIcon />}
+        >
+          Upload
+        </Button>
+      </Box>
+      <Box sx={{ display: "flex" }}>
+        <Tooltip title="Settings">
+          <IconButton sx={{ p: 0 }} onClick={() => state.setState(true)}>
+            <Avatar src={user && user.photoURL ? user.photoURL : undefined}>
+              {getDisplayNameInitials()}
+            </Avatar>
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Box>
   );
 };
