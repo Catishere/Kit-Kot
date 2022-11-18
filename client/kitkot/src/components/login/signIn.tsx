@@ -16,15 +16,13 @@ export default function SignIn({ value }: ModalProps) {
   const [loading, setLoading] = useState(false);
 
   const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const username = e.target.value;
     setError(null);
-    setForm({ ...form, username });
+    setForm({ ...form, username: e.target.value });
   };
 
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const password = e.target.value;
     setError(null);
-    setForm({ ...form, password });
+    setForm({ ...form, password: e.target.value });
   };
 
   const userContextUpdater = useUserContextUpdater();

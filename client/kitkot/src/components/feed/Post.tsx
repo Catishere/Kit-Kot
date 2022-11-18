@@ -49,7 +49,7 @@ export default function Post({ post }: { post: PostData }) {
         justifyContent: "center",
         flexDirection: "row",
         p: "20px 0px 20px 0px",
-        width: { xxs: "calc(100% - 10px)", sm: "100%" },
+        width: { xxs: "calc(100% - 10px)", sm: "auto" },
       }}
     >
       <Box>
@@ -131,7 +131,7 @@ export default function Post({ post }: { post: PostData }) {
           <Box
             sx={{
               marginLeft: "auto",
-              alignSelf: "center",
+              alignSelf: "flex-start",
             }}
           >
             <LoadingButton
@@ -155,7 +155,11 @@ export default function Post({ post }: { post: PostData }) {
             </LoadingButton>
           </Box>
         </Box>
-        <Box sx={{ width: { xxs: "100%", sm: "475px" } }}>
+        <Box
+          sx={{
+            width: { xxs: "100%", sm: "475px" },
+          }}
+        >
           {post.content.length > 128 ? (
             <Typography
               fontSize={{ xxs: 12, xs: 16 }}

@@ -19,12 +19,17 @@ export default function Video({ url }: { url: string }) {
     <Box
       display="flex"
       marginTop="10px"
+      alignSelf={{ xxs: "center", sm: "flex-start" }}
       height={{ xxs: "auto", xs: "475px" }}
       width={{ xxs: "100%", xs: "300px" }}
       padding={{ xxs: "0px", xs: "10px" }}
     >
       <video
-        style={{ backgroundColor: "black" }}
+        style={{
+          backgroundColor: "black",
+          minHeight: "350px",
+          borderRadius: "20px",
+        }}
         ref={videoRef}
         width="100%"
         height="auto"

@@ -75,6 +75,9 @@ export type Month =
 export interface RegisterForm {
   username?: string;
   password?: string;
+  displayName?: string;
+  email?: string;
+  photoURL?: string;
   day?: string;
   month?: string;
   year?: string;
@@ -83,6 +86,9 @@ export interface RegisterForm {
 export interface RegisterFormData {
   username?: string;
   password?: string;
+  displayName?: string;
+  email?: string;
+  photoURL?: string;
   day?: number;
   month: Month;
   year?: number;
@@ -108,4 +114,15 @@ export interface PostCreateData {
     name: string;
     link: string;
   };
+}
+
+export enum HttpStatus {
+  OK = 200,
+  CREATED = 201,
+  NO_CONTENT = 204,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+  INTERNAL_SERVER_ERROR = 500,
 }

@@ -1,4 +1,5 @@
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { useState } from "react";
 import headers from "../../helper/headers";
 import {
@@ -23,7 +24,11 @@ const daysOfMonth = {
   December: 31,
 };
 
-export default function SignUp({ value }: ModalProps) {
+const emailRegex = new RegExp(
+  "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+);
+
+export default function SignUp({ value, changeView }: ModalProps) {
   const [form, setForm] = useState<RegisterFormData>({
     month: "January",
     day: 1,
@@ -77,25 +82,53 @@ export default function SignUp({ value }: ModalProps) {
     });
   };
 
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    setForm({ ...form, email });
+    setError({
+      ...error,
+      email: !emailRegex.exec(email) ? "Invalid email" : undefined,
+    });
+  };
+
+  const onDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const displayName = e.target.value;
+    setForm({ ...form, displayName });
+    setError({
+      ...error,
+      displayName: !displayName.includes(" ")
+        ? "Invalid display name"
+        : undefined,
+    });
+  };
+
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const password = e.target.value;
     setForm({ ...form, password });
     setError({
       ...error,
-      password: password.length <= 8 ? "Invalid password" : undefined,
+      password: password.length < 8 ? "Invalid password" : undefined,
     });
   };
 
   const hasError = Object.values(error).some((e) => e !== undefined);
 
-  const sendForm = () => {
-    fetch("/api/auth/register", {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const sendForm = async () => {
+    const response = await fetch("/api/auth/register", {
       method: "POST",
       headers,
       body: JSON.stringify(form),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
+    });
+    const data = await response.json();
+
+    if (data.error) {
+      enqueueSnackbar(data.error, { variant: "error" });
+    } else {
+      enqueueSnackbar("Successfully registered", { variant: "success" });
+      changeView("login_email");
+    }
   };
 
   return (
@@ -186,6 +219,26 @@ export default function SignUp({ value }: ModalProps) {
         error={error.username ? true : false}
         helperText={error.username}
         onChange={onUsernameChange}
+        variant="outlined"
+      />
+      <TextField
+        sx={{ width: "100%" }}
+        id="email-input"
+        label="Email"
+        value={form.email}
+        error={error.email ? true : false}
+        helperText={error.email}
+        onChange={onEmailChange}
+        variant="outlined"
+      />
+      <TextField
+        sx={{ width: "100%" }}
+        id="displayname-input"
+        label="Display name"
+        value={form.displayName}
+        error={error.displayName ? true : false}
+        helperText={error.displayName}
+        onChange={onDisplayNameChange}
         variant="outlined"
       />
       <TextField

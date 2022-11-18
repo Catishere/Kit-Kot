@@ -18,7 +18,19 @@ export function Home() {
   }, []);
 
   return (
-    <Stack sx={{ width: "100%" }} divider={<Divider variant="middle" />}>
+    <Stack
+      sx={{ width: "100%" }}
+      divider={
+        <Divider
+          sx={{
+            width: { xxs: "100%", sm: "579px" },
+            alignSelf: "center",
+          }}
+          flexItem
+          variant="middle"
+        />
+      }
+    >
       {feed.map((post: PostData, index: number) => (
         <>
           <Post key={post.id} post={post} />
