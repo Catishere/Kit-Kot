@@ -1,4 +1,4 @@
-import { Box, Divider } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import Post from "../components/feed/Post";
 import headers from "../helper/headers";
@@ -18,13 +18,12 @@ export function Home() {
   }, []);
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Stack sx={{ width: "100%" }} divider={<Divider variant="middle" />}>
       {feed.map((post: PostData, index: number) => (
         <>
           <Post key={post.id} post={post} />
-          {index !== feed.length - 1 ? <Divider variant="middle" /> : null}
         </>
       ))}
-    </Box>
+    </Stack>
   );
 }

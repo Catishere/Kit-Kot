@@ -92,3 +92,20 @@ export interface LoginFormData {
   username: string;
   password: string;
 }
+
+export interface UploadFileResponse {
+  fileName: string;
+  fileDownloadUri: string;
+  fileType: string;
+  size: number;
+}
+
+export interface PostCreateData {
+  content: string;
+  mediaUrl: string;
+  tags: string[];
+  music: {
+    name: string;
+    link: string;
+  };
+}
