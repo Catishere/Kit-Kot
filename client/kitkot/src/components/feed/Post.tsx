@@ -6,9 +6,11 @@ import headers from "../../helper/headers";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import Video from "./Video";
+import { useSnackbar } from "notistack";
 
 export default function Post({ post }: { post: PostData }) {
   const user = useUserContextState();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +23,10 @@ export default function Post({ post }: { post: PostData }) {
   );
 
   const followUser = async () => {
+    if (!user)
+      return enqueueSnackbar("You need to be logged in to follow users", {
+        variant: "warning",
+      });
     setLoading(true);
     fetch(`/api/user/${user?.id}/follow/${post.user?.id}`, {
       method: "POST",
@@ -54,6 +60,7 @@ export default function Post({ post }: { post: PostData }) {
     >
       <Box>
         <Avatar
+          src={post.user?.photoURL}
           sx={{
             display: { xxs: "none", xs: "flex" },
             width: { xxs: 40, sm: 56 },
@@ -80,6 +87,7 @@ export default function Post({ post }: { post: PostData }) {
         >
           <Box>
             <Avatar
+              src={post.user?.photoURL}
               sx={{
                 display: { xxs: "flex", xs: "none" },
                 width: { xxs: 40, sm: 56 },
