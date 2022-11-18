@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserData {
+public class UserDataResponse {
     protected User user;
     protected FollowingData followingData;
 }

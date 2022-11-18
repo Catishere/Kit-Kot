@@ -1,11 +1,12 @@
 package com.cat.tu.controller;
 
+import com.cat.tu.dto.FollowingData;
+import com.cat.tu.dto.JwtTokenResponse;
+import com.cat.tu.dto.UserLoginRequest;
+import com.cat.tu.dto.UserRegisterRequest;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
 import com.cat.tu.util.JWTUtil;
-import com.cat.tu.dto.FollowingData;
-import com.cat.tu.dto.UserDataLogin;
-import com.cat.tu.dto.UserLoginData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,8 +39,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public HttpStatus getDefault(@RequestBody UserLoginData loginData) {
-        User user = new User(loginData.getUsername(), passwordEncoder.encode(loginData.getPassword()), "ROLE_USER");
+    public HttpStatus getDefault(@RequestBody UserRegisterRequest registerData) {
+        User user = new User(registerData.getUsername(),
+                passwordEncoder.encode(registerData.getPassword()),
+                registerData.getEmail(),
+                registerData.getDisplayName(),
+                "nqmam.png",
+                "ROLE_USER");
         if (userService.saveUser(user).isPresent())
             return HttpStatus.CREATED;
         else
@@ -47,7 +53,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDataLogin> loginHandler(@RequestBody UserLoginData loginData){
+    public ResponseEntity<JwtTokenResponse> loginHandler(@RequestBody UserLoginRequest loginData){
         try {
             UsernamePasswordAuthenticationToken authInputToken =
                     new UsernamePasswordAuthenticationToken(loginData.getUsername(), loginData.getPassword());
@@ -57,7 +63,7 @@ public class AuthenticationController {
             String token = jwtUtil.generateToken(loginData.getUsername());
             User user = userService.getUser(loginData.getUsername()).get();
 
-            return new ResponseEntity<>(new UserDataLogin(user,
+            return new ResponseEntity<>(new JwtTokenResponse(user,
                     new FollowingData(user.getFollowing(), user.getFollowers()), token), HttpStatus.OK);
         } catch (AuthenticationException authExc){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

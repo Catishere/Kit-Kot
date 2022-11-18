@@ -6,13 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDataLogin extends UserData {
+public class JwtTokenResponse extends UserDataResponse {
     private String jwtToken;
 
-    public UserDataLogin() {
+    public JwtTokenResponse() {
     }
 
-    public UserDataLogin(User user, FollowingData followingData, String jwtToken) {
+    public JwtTokenResponse(User user, FollowingData followingData, String jwtToken) {
         super(user, followingData);
         this.jwtToken = jwtToken;
     }
