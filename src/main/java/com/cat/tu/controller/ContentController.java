@@ -38,6 +38,11 @@ public class ContentController {
                 file.getContentType(), file.getSize()), HttpStatus.OK);
     }
 
+    @GetMapping("/user/{username}/avatar")
+    public ResponseEntity<Resource> getUserAvatar(@PathVariable String username, HttpServletRequest request) {
+        return downloadFile("users/" + username + "/avatar.jpg", request);
+    }
+
     @GetMapping("/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = contentService.loadAsResource(fileName);
