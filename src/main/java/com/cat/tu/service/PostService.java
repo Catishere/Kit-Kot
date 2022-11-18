@@ -33,15 +33,26 @@ public class PostService {
     }
 
     public Post save(Post post) {
-        Optional<User> user = userRepository.findUserById(post.getUser().getId());
+        Optional<User> user;
+        if (post.getUser().getId() != null) {
+            user = userRepository.findUserById(post.getUser().getId());
+        } else if (post.getUser().getUsername() != null) {
+            user = userRepository.findUserByUsername(post.getUser().getUsername());
+        } else {
+            return null;
+        }
+
         if (user.isEmpty())
             return null;
 
-        Optional<Music> music = musicRepository.findMusicById(post.getMusic().getId());
-        if(music.isEmpty())
-            return null;
+        if (post.getMusic() != null) {
+            Optional<Music> music = musicRepository.findMusicById(post.getMusic().getId());
+            if (music.isEmpty())
+                return null;
+            post.setMusic(music.get());
+        }
+
         post.setUser(user.get());
-        post.setMusic(music.get());
         return postRepository.save(post);
     }
 

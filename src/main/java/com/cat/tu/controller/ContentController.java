@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -30,20 +29,16 @@ public class ContentController {
 
     @PostMapping("/upload")
     public ResponseEntity<UploadFileResponse> uploadFile(@RequestParam("file") MultipartFile file,
-                                                         HttpServletRequest request) {
-        String username = jwtUtil.validateTokenAndRetrieveSubject(request.getHeader("Authorization").
-                substring("Bearer ".length()));
+                                                         @RequestHeader("Authorization") String token) {
+        String username = jwtUtil.validateTokenAndRetrieveSubject(token.substring("Bearer ".length()));
         String fileName = contentService.store(file, username);
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
-                .path(fileName)
-                .toUriString();
+        String fileDownloadUri = "/api/content/" + fileName;
 
-        return new ResponseEntity<>( new UploadFileResponse(fileName, fileDownloadUri,
+        return new ResponseEntity<>(new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize()), HttpStatus.OK);
     }
 
-    @GetMapping("/download/{fileName:.+}")
+    @GetMapping("/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = contentService.loadAsResource(fileName);
 
