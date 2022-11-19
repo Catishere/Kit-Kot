@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect, useRef } from "react";
 
-export default function Video({ url }: { url: string }) {
+export default function Video({ url, size }: { url: string; size?: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const playPause = (video: HTMLVideoElement) => {
@@ -20,14 +20,14 @@ export default function Video({ url }: { url: string }) {
       display="flex"
       marginTop="10px"
       alignSelf={{ xxs: "center", sm: "flex-start" }}
-      height={{ xxs: "auto", xs: "475px" }}
-      width={{ xxs: "100%", xs: "300px" }}
+      height={size ? size.height : { xxs: "auto", xs: "475px" }}
+      width={size ? size.width : { xxs: "100%", xs: "300px" }}
       padding={{ xxs: "0px", xs: "10px" }}
     >
       <video
         style={{
           backgroundColor: "black",
-          minHeight: "350px",
+          minHeight: size ? size.height : "350px",
           borderRadius: "20px",
         }}
         ref={videoRef}

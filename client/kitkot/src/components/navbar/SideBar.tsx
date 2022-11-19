@@ -118,7 +118,7 @@ export default function MiniDrawer() {
         <DrawerHeader />
         <Divider />
         <List>
-          {navigations.map((nav, index) => (
+          {navigations.map((nav) => (
             <ListItem key={nav.name} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
@@ -180,6 +180,8 @@ export default function MiniDrawer() {
                   px: 2.5,
                   py: 0,
                 }}
+                component={Link}
+                to={`/@${user?.username}`}
               >
                 <ListItemIcon
                   sx={{

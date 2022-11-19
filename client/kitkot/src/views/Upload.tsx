@@ -5,7 +5,11 @@ import { useSnackbar } from "notistack";
 import { useState } from "react";
 import Video from "../components/feed/Video";
 import headers, { uploadHeaders } from "../helper/headers";
-import { HttpStatus, PostCreateData } from "../types/types.interface";
+import {
+  HttpStatus,
+  PostCreateData,
+  UploadFileResponse,
+} from "../types/types.interface";
 
 const EMPTY_FORM: PostCreateData = {
   content: "",
@@ -49,13 +53,13 @@ export function Upload() {
 
   const publish = async () => {
     setLoading(true);
-    const uploadData = await sendImage();
+    const uploadData: UploadFileResponse = await sendImage();
 
     if (!selectedFile) return;
     const response = await fetch("http://localhost:3000/api/post/", {
       method: "POST",
       headers: headers,
-      body: JSON.stringify({ ...form, mediaUrl: uploadData.url }),
+      body: JSON.stringify({ ...form, mediaUrl: uploadData.fileDownloadUri }),
     });
 
     if (response.status === HttpStatus.CREATED) {

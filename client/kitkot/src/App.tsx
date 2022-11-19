@@ -10,6 +10,7 @@ import { UserContextProvider } from "./contexts/UserContext";
 import getTheme from "./helper/getTheme";
 import { Following } from "./views/Following";
 import { Home } from "./views/Home";
+import { Profile } from "./views/Profile";
 import { Upload } from "./views/Upload";
 
 function App() {
@@ -50,6 +51,9 @@ function App() {
     },
   };
 
+  const pagesWithSidebar = ["", "following", "upload", "@:username"];
+  const sidebar = <SideBar />;
+
   return (
     <div className="App">
       <ColorModeContext.Provider value={colorMode}>
@@ -58,9 +62,9 @@ function App() {
             <BrowserRouter>
               <Navbar />
               <Routes>
-                <Route path="/" element={<SideBar />} />
-                <Route path="/following" element={<SideBar />} />
-                <Route path="/upload" element={<SideBar />} />
+                {pagesWithSidebar.map((page) => (
+                  <Route path={page} element={sidebar} />
+                ))}
               </Routes>
               <Box component="main" sx={mainStyle}>
                 <CssBaseline />
@@ -68,6 +72,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/following" element={<Following />} />
                   <Route path="/upload" element={<Upload />} />
+                  <Route path={`@:username`} element={<Profile />} />
                 </Routes>
               </Box>
             </BrowserRouter>
