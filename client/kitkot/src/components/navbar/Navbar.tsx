@@ -78,7 +78,11 @@ export default function Navbar() {
           ),
           keep: true,
         },
-        { key: "", content: <Divider />, disabled: true },
+        {
+          key: "",
+          content: <Divider flexItem sx={{ width: "100%" }} />,
+          disabled: true,
+        },
         { key: "Logout", icon: LogoutIcon, onClick: logout },
       ]);
     } else {

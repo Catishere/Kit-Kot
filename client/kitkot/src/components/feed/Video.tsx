@@ -27,7 +27,7 @@ export default function Video({ url, size }: { url: string; size?: any }) {
       <video
         style={{
           backgroundColor: "black",
-          minHeight: size ? size.height : "350px",
+          minHeight: size ? size.height : "320px",
           borderRadius: "20px",
         }}
         ref={videoRef}
