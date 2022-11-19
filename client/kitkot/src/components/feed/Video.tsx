@@ -18,7 +18,6 @@ export default function Video({ url, size }: { url: string; size?: any }) {
   return (
     <Box
       display="flex"
-      marginTop="10px"
       alignSelf={{ xxs: "center", sm: "flex-start" }}
       height={size ? size.height : { xxs: "auto", xs: "475px" }}
       width={size ? size.width : { xxs: "100%", xs: "300px" }}
@@ -27,7 +26,7 @@ export default function Video({ url, size }: { url: string; size?: any }) {
       <video
         style={{
           backgroundColor: "black",
-          minHeight: size ? size.height : "320px",
+          minHeight: size ? size.height : "auto",
           borderRadius: "20px",
         }}
         ref={videoRef}

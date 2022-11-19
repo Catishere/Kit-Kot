@@ -1,10 +1,10 @@
 import { PhotoCamera } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Card, Stack, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import Video from "../components/feed/Video";
-import headers, { uploadHeaders } from "../helper/headers";
+import getHeaders, { getUploadHeaders } from "../helper/headers";
 import {
   HttpStatus,
   PostCreateData,
@@ -25,6 +25,7 @@ export function Upload() {
   const [selectedFile, setSelectedFile] = useState<string | Blob>("");
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [form, setForm] = useState<PostCreateData>(EMPTY_FORM);
+  const [tagsInput, setTagsInput] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -38,7 +39,7 @@ export function Upload() {
     formData.append("file", selectedFile);
     const response = await fetch("http://localhost:3000/api/content/upload", {
       method: "POST",
-      headers: uploadHeaders,
+      headers: getUploadHeaders(),
       body: formData,
     });
     return response.json();
@@ -58,12 +59,15 @@ export function Upload() {
     if (!selectedFile) return;
     const response = await fetch("http://localhost:3000/api/post/", {
       method: "POST",
-      headers: headers,
+      headers: getHeaders(),
       body: JSON.stringify({ ...form, mediaUrl: uploadData.fileDownloadUri }),
     });
 
     if (response.status === HttpStatus.CREATED) {
       setForm(EMPTY_FORM);
+      setSelectedFile("");
+      setPreviewUrl("");
+      setTagsInput("");
       enqueueSnackbar("Post created", { variant: "success" });
     } else {
       enqueueSnackbar("Post creation failed", { variant: "error" });
@@ -78,9 +82,13 @@ export function Upload() {
 
   const onTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tags = e.target.value;
+    setTagsInput(tags);
     setForm({
       ...form,
-      tags: tags.split(/[, ]/).map((tag) => tag.trim()),
+      tags: tags
+        .split(/[, ]/)
+        .map((tag) => tag.trim())
+        .filter((tag) => tag !== "" && tag.length < 20),
     });
   };
 
@@ -89,16 +97,27 @@ export function Upload() {
       sx={{
         width: "100%",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: { xxs: "column", sm: "row" },
         justifyContent: "center",
         alignContent: "center",
         paddingTop: "20px",
       }}
     >
-      <Card sx={{ marginX: "20px", p: 0 }}>
+      <Box
+        alignSelf={{ xxs: "center", sm: "flex-start" }}
+        sx={{ px: { xxs: "20px", xs: 0 } }}
+      >
         <Video url={previewUrl} />
-      </Card>
-      <Stack direction="column" alignItems="center" spacing={2}>
+      </Box>
+
+      <Stack
+        padding={"10px"}
+        maxWidth={"300px"}
+        width={{ xxs: "100%", sm: "auto" }}
+        direction="column"
+        alignSelf={"center"}
+        gap={"5px"}
+      >
         <TextField
           sx={{ width: "100%" }}
           id="content-input"
@@ -130,11 +149,17 @@ export function Upload() {
           sx={{ width: "100%" }}
           id="tags-input"
           label="Tags"
-          value={form?.tags}
+          value={tagsInput}
           onChange={onTagsChange}
           variant="outlined"
         />
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack
+          direction="row"
+          alignContent="center"
+          justifyContent="center"
+          flexWrap={"wrap"}
+          gap="10px"
+        >
           <Button
             startIcon={<PhotoCamera />}
             variant="contained"
