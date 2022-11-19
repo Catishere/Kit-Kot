@@ -25,7 +25,9 @@ import java.util.List;
     "credentialsNonExpired",
     "enabled",
     "followers",
-    "following"})
+    "following",
+    "likedPosts"
+})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -55,6 +57,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "following_id")
     )
+    @ToString.Exclude
     private List<User> following;
 
     @ManyToMany
@@ -63,7 +66,18 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "following_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @ToString.Exclude
     private List<User> followers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    @ToString.Exclude
+    private List<Post> likedPosts;
+
 
     public User() {
     }

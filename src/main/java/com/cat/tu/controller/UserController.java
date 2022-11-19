@@ -1,9 +1,10 @@
 package com.cat.tu.controller;
 
+import com.cat.tu.dto.FollowingData;
+import com.cat.tu.dto.PostDTO;
+import com.cat.tu.dto.UserDataResponse;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
-import com.cat.tu.dto.FollowingData;
-import com.cat.tu.dto.UserDataResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class UserController {
         User u = user.get();
 
         return new ResponseEntity<>(new UserDataResponse(u,
-                new FollowingData(u.getFollowing(), u.getFollowers())), HttpStatus.OK);
+                new FollowingData(u.getFollowing(), u.getFollowers()), null), HttpStatus.OK);
     }
 
     @GetMapping("/suggested")
@@ -45,7 +46,9 @@ public class UserController {
         return this.userService.getUserById(id)
                 .map(user ->
                     new ResponseEntity<>(new UserDataResponse(user,
-                            new FollowingData(user.getFollowing(), user.getFollowers())), HttpStatus.OK))
+                            new FollowingData(user.getFollowing(), user.getFollowers()),
+                            user.getLikedPosts().stream().map((p) -> new PostDTO(p.getId())).toList()),
+                            HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

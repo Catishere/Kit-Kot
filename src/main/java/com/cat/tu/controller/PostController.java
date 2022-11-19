@@ -58,4 +58,14 @@ public class PostController {
                 ? new ResponseEntity<>(post, HttpStatus.CREATED)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Post> likePost(@PathVariable Long postId, @RequestHeader("Authorization") String token) {
+
+        String username = jwtUtil.validateTokenAndRetrieveSubject(token.substring("Bearer ".length()));
+        Post post = postService.likePost(username, postId);
+        return post != null
+                ? new ResponseEntity<>(post, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

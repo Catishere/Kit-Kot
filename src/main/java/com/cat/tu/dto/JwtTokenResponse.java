@@ -4,6 +4,8 @@ import com.cat.tu.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class JwtTokenResponse extends UserDataResponse {
@@ -12,8 +14,8 @@ public class JwtTokenResponse extends UserDataResponse {
     public JwtTokenResponse() {
     }
 
-    public JwtTokenResponse(User user, FollowingData followingData, String jwtToken) {
-        super(user, followingData);
+    public JwtTokenResponse(User user, FollowingData followingData, List<PostDTO> likedPosts, String jwtToken) {
+        super(user, followingData, likedPosts);
         this.jwtToken = jwtToken;
     }
 }

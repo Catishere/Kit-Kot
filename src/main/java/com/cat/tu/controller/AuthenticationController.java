@@ -1,9 +1,6 @@
 package com.cat.tu.controller;
 
-import com.cat.tu.dto.FollowingData;
-import com.cat.tu.dto.JwtTokenResponse;
-import com.cat.tu.dto.UserLoginRequest;
-import com.cat.tu.dto.UserRegisterRequest;
+import com.cat.tu.dto.*;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
 import com.cat.tu.util.JWTUtil;
@@ -64,7 +61,9 @@ public class AuthenticationController {
             User user = userService.getUser(loginData.getUsername()).get();
 
             return new ResponseEntity<>(new JwtTokenResponse(user,
-                    new FollowingData(user.getFollowing(), user.getFollowers()), token), HttpStatus.OK);
+                    new FollowingData(user.getFollowing(), user.getFollowers()),
+                    user.getLikedPosts().stream().map((p) -> new PostDTO(p.getId())).toList(),
+                    token), HttpStatus.OK);
         } catch (AuthenticationException authExc){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

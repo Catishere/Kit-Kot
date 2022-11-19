@@ -38,6 +38,9 @@ public class Post {
     @ManyToOne(cascade = {CascadeType.ALL})
     private Music music;
 
+    @Column(name="likes")
+    private int likes;
+
     public Post() {
 
     }
