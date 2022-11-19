@@ -6,6 +6,7 @@ import { PostData, UserInfo } from "../types/types.interface";
 import EditIcon from "@mui/icons-material/Edit";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Video from "../components/feed/Video";
+import { useUserContextState } from "../contexts/UserContext";
 
 const UserNotFound = () => {
   return (
@@ -25,6 +26,7 @@ export const UserProfile = ({
   videos: PostData[];
 }) => {
   const [tab, setTab] = useState<number>(0);
+  const currentUser = useUserContextState();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -66,14 +68,18 @@ export const UserProfile = ({
           ) : (
             <Skeleton variant="text" sx={{ fontSize: 16 }} />
           )}
-          <Button
-            color="neutral"
-            variant="outlined"
-            startIcon={<EditIcon />}
-            sx={{ whiteSpace: "nowrap", width: "fit-content" }}
-          >
-            Edit Profile
-          </Button>
+          {user?.id === currentUser?.id ? (
+            <Button
+              color="neutral"
+              variant="outlined"
+              startIcon={<EditIcon />}
+              sx={{ whiteSpace: "nowrap", width: "fit-content" }}
+            >
+              Edit Profile
+            </Button>
+          ) : (
+            <></>
+          )}
         </Stack>
       </Box>
       <Stack direction="row" gap={"15px"}>
@@ -106,7 +112,7 @@ export const UserProfile = ({
         <Box sx={{ borderBottom: 1, borderColor: "divider", width: "460px" }}>
           <TabList onChange={handleChange} aria-label="profile-tabs">
             <Tab label="Videos" value="1" sx={{ width: "50%" }} />
-            <Tab label="Likes" value="2" sx={{ width: "50%" }} />
+            <Tab label="Liked" value="2" sx={{ width: "50%" }} />
           </TabList>
         </Box>
         <TabPanel
@@ -122,7 +128,7 @@ export const UserProfile = ({
             );
           })}
         </TabPanel>
-        <TabPanel value="2">Likes</TabPanel>
+        <TabPanel value="2">Liked</TabPanel>
       </TabContext>
     </Box>
   );
