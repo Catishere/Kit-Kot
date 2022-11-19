@@ -1,21 +1,38 @@
-import { Avatar, Box, Container, Link, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Container,
+  IconButton,
+  Link,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { PostData } from "../../types/types.interface";
 import Moment from "react-moment";
 import { useUserContextState } from "../../contexts/UserContext";
-import headers from "../../helper/headers";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import Video from "./Video";
 import { useSnackbar } from "notistack";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
+import CommentIcon from "@mui/icons-material/Comment";
+import ShareIcon from "@mui/icons-material/Share";
+import getHeaders from "../../helper/headers";
 
 export default function Post({ post }: { post: PostData }) {
   const user = useUserContextState();
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(false);
+  const [hoverLiked, setHoverLiked] = useState(false);
 
   const isFollowed = user?.followingData?.following?.some(
     (user) => user?.username === post.user?.username
+  );
+
+  const isLiked = user?.likedPosts?.some(
+    (likedPost) => likedPost?.id === post.id
   );
 
   const canFollowBack = user?.followingData?.followers?.some(
@@ -28,9 +45,10 @@ export default function Post({ post }: { post: PostData }) {
         variant: "warning",
       });
     setLoading(true);
+    // remove user from following
     fetch(`/api/user/${user?.id}/follow/${post.user?.id}`, {
       method: "POST",
-      headers,
+      headers: getHeaders(),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -47,6 +65,29 @@ export default function Post({ post }: { post: PostData }) {
       });
   };
 
+  const likePost = async () => {
+    if (!user)
+      return enqueueSnackbar("You need to be logged in to like posts", {
+        variant: "warning",
+      });
+    setLoading(true);
+    fetch(`/api/post/${post.id}/like`, {
+      method: "POST",
+      headers: getHeaders(),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const i = user?.likedPosts.findIndex((post) => post.id === data.id);
+        if (i >= 0) user?.likedPosts.splice(i, 1);
+        else user?.likedPosts.push(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
   return (
     <Container
       sx={{
@@ -55,7 +96,7 @@ export default function Post({ post }: { post: PostData }) {
         justifyContent: "center",
         flexDirection: "row",
         p: "20px 0px 20px 0px",
-        width: { xxs: "calc(100% - 10px)", sm: "auto" },
+        width: { xxs: "calc(100% - 15px)", sm: "auto" },
       }}
     >
       <Box>
@@ -198,7 +239,41 @@ export default function Post({ post }: { post: PostData }) {
             </Typography>
           )}
         </Box>
-        <Video url={post.mediaUrl}></Video>
+        <Stack
+          display="flex"
+          width="100%"
+          direction="row"
+          justifyContent="flex-start"
+        >
+          <Video url={post.mediaUrl}></Video>
+          <Stack
+            display="flex"
+            direction="column"
+            gap="5px"
+            justifyContent="flex-end"
+            pb="10px"
+          >
+            <IconButton
+              onMouseEnter={() => setHoverLiked(true)}
+              onMouseLeave={() => setHoverLiked(false)}
+              onClick={() => likePost()}
+              sx={{
+                backgroundColor: isLiked ? "secondary.dark" : "modal.main",
+                "&:hover": {
+                  backgroundColor: isLiked ? "maroon" : "secondary.dark",
+                },
+              }}
+            >
+              {hoverLiked && isLiked ? <HeartBrokenIcon /> : <FavoriteIcon />}
+            </IconButton>
+            <IconButton sx={{ backgroundColor: "modal.main" }}>
+              <CommentIcon />
+            </IconButton>
+            <IconButton sx={{ backgroundColor: "modal.main" }}>
+              <ShareIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
       </Box>
     </Container>
   );

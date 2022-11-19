@@ -46,6 +46,7 @@ export type UserInfo = {
   email: string;
   photoURL: string;
   followingData: FollowingData;
+  likedPosts: PostData[];
 } | null;
 
 export interface ModalProps {
