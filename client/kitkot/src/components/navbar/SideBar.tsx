@@ -15,8 +15,8 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, Typography } from "@mui/material";
-import headers from "../../helper/headers";
 import { UserInfo } from "../../types/types.interface";
+import getHeaders from "../../helper/headers";
 
 const drawerWidth = 240;
 
@@ -87,7 +87,7 @@ export default function MiniDrawer() {
   useEffect(() => {
     fetch("/api/user/suggested", {
       method: "GET",
-      headers,
+      headers: getHeaders(),
     })
       .then((res) => res.json())
       .then((data) => setSuggestedUsers(data))

@@ -1,7 +1,7 @@
 import { Divider, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import Post from "../components/feed/Post";
-import headers from "../helper/headers";
+import getHeaders from "../helper/headers";
 import { PostData } from "../types/types.interface";
 
 export function Home() {
@@ -10,7 +10,7 @@ export function Home() {
   useEffect(() => {
     fetch("/api/post/trending", {
       method: "GET",
-      headers,
+      headers: getHeaders(),
     })
       .then((res) => res.json())
       .then((data) => setFeed(data))

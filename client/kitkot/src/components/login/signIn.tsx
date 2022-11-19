@@ -2,8 +2,8 @@ import { LoadingButton } from "@mui/lab";
 import { Alert, Box, Collapse, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useUserContextUpdater } from "../../contexts/UserContext";
-import headers from "../../helper/headers";
-import { FollowingData, UserInfo } from "../../types/types.interface";
+import getHeaders from "../../helper/headers";
+import { FollowingData, PostData, UserInfo } from "../../types/types.interface";
 import { LoginFormData, ModalProps } from "../../types/types.interface";
 
 export default function SignIn({ value }: ModalProps) {
@@ -31,7 +31,7 @@ export default function SignIn({ value }: ModalProps) {
     setLoading(true);
     fetch("/api/auth/login", {
       method: "POST",
-      headers,
+      headers: getHeaders(),
       body: JSON.stringify(form),
     })
       .then((res) => {
@@ -47,10 +47,12 @@ export default function SignIn({ value }: ModalProps) {
           jwtToken: string;
           user: UserInfo;
           followingData: FollowingData;
+          likedPosts: PostData[];
         }) => {
           const userInfo = {
             ...data.user,
             followingData: data.followingData,
+            likedPosts: data.likedPosts,
           } as UserInfo;
 
           if (data.jwtToken) {

@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import headers from "../helper/headers";
+import getHeaders from "../helper/headers";
 import { UserInfo } from "../types/types.interface";
 import { ChildrenProp } from "../types/types.interface";
 
@@ -53,7 +53,7 @@ const UserContextProvider = ({ children }: ChildrenProp) => {
     setUser(userObject);
     fetch(`/api/user/${userObject.id}`, {
       method: "GET",
-      headers,
+      headers: getHeaders(),
     })
       .then((res) => {
         if (res.status === 200) {
@@ -63,7 +63,11 @@ const UserContextProvider = ({ children }: ChildrenProp) => {
         }
       })
       .then((data) => {
-        const userInfo = { ...data.user, followingData: data.followingData };
+        const userInfo = {
+          ...data.user,
+          followingData: data.followingData,
+          likedPosts: data.likedPosts,
+        };
         setUser(userInfo);
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
       })

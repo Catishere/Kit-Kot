@@ -1,7 +1,7 @@
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import headers from "../../helper/headers";
+import getHeaders from "../../helper/headers";
 import {
   ModalProps,
   Month,
@@ -118,7 +118,7 @@ export default function SignUp({ value, changeView }: ModalProps) {
   const sendForm = async () => {
     const response = await fetch("/api/auth/register", {
       method: "POST",
-      headers,
+      headers: getHeaders(),
       body: JSON.stringify(form),
     });
     const data = await response.json();
