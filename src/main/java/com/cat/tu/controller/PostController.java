@@ -28,12 +28,22 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getUserById(@PathVariable Long id) {
+    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
         if (id == null || id < 0)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return this.postService.getPostById(id)
                 .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable String username) {
+        if (username == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        var posts = this.postService.getPostsByUsername(username);
+        if (posts.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(posts.get(), HttpStatus.OK);
     }
 
     @PostMapping

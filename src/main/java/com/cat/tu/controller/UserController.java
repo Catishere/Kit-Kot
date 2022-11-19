@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<User> getUser(@RequestParam String username) {
+    public ResponseEntity<UserDataResponse> getUser(@RequestParam String username) {
         if (username == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -27,7 +27,10 @@ public class UserController {
         if (user.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        User u = user.get();
+
+        return new ResponseEntity<>(new UserDataResponse(u,
+                new FollowingData(u.getFollowing(), u.getFollowers())), HttpStatus.OK);
     }
 
     @GetMapping("/suggested")

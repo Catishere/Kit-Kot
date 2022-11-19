@@ -56,6 +56,10 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Optional<List<Post>> getPostsByUsername(String username) {
+        return postRepository.findAllPostsByUserUsername(username);
+    }
+
     public List<Post> getTrending() {
         return postRepository.findAll();
     }
