@@ -13,7 +13,6 @@ export interface MenuOptions {
   content?: React.ReactNode;
   disabled?: boolean;
   keep?: boolean;
-  to?: string;
   onClick?: () => void;
 }
 

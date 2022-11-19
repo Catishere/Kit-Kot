@@ -51,7 +51,13 @@ function App() {
     },
   };
 
-  const pagesWithSidebar = ["", "following", "upload", "@:username"];
+  const pagesWithSidebar = [
+    "",
+    "following",
+    "upload",
+    "@:username",
+    "settings",
+  ];
   const sidebar = <SideBar />;
 
   return (

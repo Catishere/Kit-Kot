@@ -33,11 +33,12 @@ import {
 } from "../../contexts/UserContext";
 import { MenuOptions, State } from "../../types/types.interface";
 import LoginModalContent from "../login/LoginModalContent";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const user = useUserContextState();
   const setUser = useUserContextUpdater();
+  const navigate = useNavigate();
   const theme = useTheme();
   const [settings, setSettings] = useState([] as MenuOptions[]);
   const [open, setOpen] = useState(false);
@@ -52,8 +53,20 @@ export default function Navbar() {
 
     if (user) {
       setSettings([
-        { key: "Profile", icon: PermIdentityIcon, to: "/profile" },
-        { key: "Settings", icon: SettingsIcon, to: "/settings" },
+        {
+          key: "Profile",
+          icon: PermIdentityIcon,
+          onClick: () => {
+            navigate(`/@${user.username}`);
+          },
+        },
+        {
+          key: "Settings",
+          icon: SettingsIcon,
+          onClick: () => {
+            navigate("/settings");
+          },
+        },
         {
           key: "Dark mode",
           icon: colorMode.colorMode === "dark" ? DarkModeIcon : LightModeIcon,
@@ -83,7 +96,7 @@ export default function Navbar() {
         },
       ]);
     }
-  }, [user, setUser, colorMode]);
+  }, [user, setUser, colorMode, navigate]);
 
   return (
     <AppBar
