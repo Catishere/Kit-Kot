@@ -20,4 +20,6 @@ public interface MusicRepository extends  CrudRepository<Music, Long> {
     Music save(Music music);
 
     Optional<Music> findMusicById(Long id);
+
+    Music getOne(Long id);
 }

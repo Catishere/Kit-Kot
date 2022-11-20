@@ -22,4 +22,6 @@ public interface PostRepository extends  CrudRepository<Post, Long> {
     Optional<List<Post>> findAllPostsByUserUsername(String username);
 
     Optional<Post> findPostById(Long id);
+
+    Post getOne(Long id);
 }
