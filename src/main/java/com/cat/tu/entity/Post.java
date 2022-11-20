@@ -1,6 +1,7 @@
 package com.cat.tu.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,6 +14,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@JsonIgnoreProperties({
+    "comments"
+})
 public class Post {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -40,6 +44,11 @@ public class Post {
 
     @Column(name="likes")
     private int likes;
+
+    @Column(name="comments")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Comment> comments;
 
     public Post() {
 

@@ -1,5 +1,6 @@
 package com.cat.tu.service;
 
+import com.cat.tu.entity.Comment;
 import com.cat.tu.entity.Music;
 import com.cat.tu.entity.Post;
 import com.cat.tu.entity.User;
@@ -74,6 +75,16 @@ public class PostService {
 
         post.setUser(user.get());
         return postRepository.save(post);
+    }
+
+    public void addComment(Long id, String username, String comment) {
+        var post = postRepository.findPostById(id)
+                .orElseThrow(() -> new PostNotFoundException("Post not found"));
+        var user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        post.getComments().add(new Comment(user, post, comment));
+        postRepository.save(post);
     }
 
     public Optional<List<Post>> getPostsByUsername(String username) {

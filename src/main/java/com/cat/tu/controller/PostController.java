@@ -1,5 +1,6 @@
 package com.cat.tu.controller;
 
+import com.cat.tu.entity.Comment;
 import com.cat.tu.entity.Post;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.PostService;
@@ -36,6 +37,15 @@ public class PostController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<Comment>> getComments(@PathVariable Long id) {
+        if (id == null || id < 0)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return this.postService.getPostById(id)
+                .map(value -> new ResponseEntity<>(value.getComments(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping("/user/{username}")
     public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable String username) {
         if (username == null)
@@ -57,6 +67,21 @@ public class PostController {
         return postService.save(post) != null
                 ? new ResponseEntity<>(post, HttpStatus.CREATED)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/{postId}/comment")
+    public ResponseEntity<Post> comment(@PathVariable Long postId,
+                                        @RequestBody String comment,
+                                        @RequestHeader("Authorization") String token) {
+
+        String username = jwtUtil.validateTokenAndRetrieveSubject(token.substring("Bearer ".length()));
+
+        try {
+            postService.addComment(postId, username, comment);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/{postId}/like")
