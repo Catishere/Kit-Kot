@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Comment, ChildrenProp } from "../types/types.interface";
+import { ChildrenProp, CommentSectionData } from "../types/types.interface";
 
-const CommentSectionContextState = createContext(null as Comment[] | null);
+const CommentSectionContextState = createContext(
+  null as CommentSectionData | null
+);
 const CommentSectionContextUpdater = createContext(
-  (comments: Comment[] | null) => {}
+  (commentData: CommentSectionData | null) => {}
 );
 
 const useCommentSectionContextState = () => {
@@ -28,14 +30,19 @@ const useCommentSectionContextUpdater = () => {
 };
 
 const CommentSectionContextProvider = ({ children }: ChildrenProp) => {
-  const [comments, setComments] = useState(null as Comment[] | null);
+  const [commentData, setCommentData] = useState(
+    null as CommentSectionData | null
+  );
 
-  const setCommentSectionState = useCallback((comments: Comment[] | null) => {
-    setComments(comments);
-  }, []);
+  const setCommentSectionState = useCallback(
+    (commentData: CommentSectionData | null) => {
+      setCommentData(commentData);
+    },
+    []
+  );
 
   return (
-    <CommentSectionContextState.Provider value={comments}>
+    <CommentSectionContextState.Provider value={commentData}>
       <CommentSectionContextUpdater.Provider value={setCommentSectionState}>
         {children}
       </CommentSectionContextUpdater.Provider>

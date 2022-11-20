@@ -133,3 +133,8 @@ export interface Comment {
   date: Date;
   content: string;
 }
+
+export interface CommentSectionData {
+  postId: number;
+  comments: Comment[];
+}

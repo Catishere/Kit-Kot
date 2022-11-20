@@ -1,16 +1,57 @@
-import { Box, Divider, Modal, Stack } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Modal,
+  Stack,
+  TextField,
+} from "@mui/material";
 import {
   useCommentSectionContextState,
   useCommentSectionContextUpdater,
 } from "../../contexts/CommentSectionContext";
 import { CommentElement } from "./Comment";
+import SendIcon from "@mui/icons-material/Send";
+import { useState } from "react";
+import getHeaders from "../../helper/headers";
+import { useSnackbar } from "notistack";
 
 export default function CommentSection() {
-  const comments = useCommentSectionContextState();
-  const setComments = useCommentSectionContextUpdater();
+  const commentData = useCommentSectionContextState();
+  const setCommentData = useCommentSectionContextUpdater();
+  const [comment, setComment] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
-  return comments ? (
-    <Modal open={comments !== null} onClose={() => setComments(null)}>
+  const handleComment = () => {
+    if (!commentData) return;
+    fetch(`/api/comment/${commentData.postId}`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: comment,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else if (res.status === 401 || res.status === 403) {
+          throw new Error("You need to be logged in to comment");
+        } else {
+          throw new Error("Something went wrong");
+        }
+      })
+      .then((data) => {
+        setCommentData({
+          ...commentData,
+          comments: [...commentData.comments, data],
+        });
+        setComment("");
+      })
+      .catch((err) => {
+        enqueueSnackbar(err.message, { variant: "error" });
+      });
+  };
+
+  return commentData ? (
+    <Modal open={commentData !== null} onClose={() => setCommentData(null)}>
       <Box
         sx={{
           display: "block",
@@ -28,9 +69,31 @@ export default function CommentSection() {
         }}
       >
         <Stack display="flex" divider={<Divider sx={{ marginY: "15px" }} />}>
-          {comments.map((comment) => (
+          {commentData.comments.map((comment) => (
             <CommentElement comment={comment} />
           ))}
+          <Box
+            display="flex"
+            justifyContent="flex-start"
+            alignContent="center"
+            paddingX="10px"
+            width="100%"
+          >
+            <TextField
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              sx={{ width: "100%" }}
+              variant="outlined"
+              placeholder="Add comment..."
+            />
+            <IconButton
+              disableRipple
+              disabled={comment === ""}
+              onClick={() => handleComment()}
+            >
+              <SendIcon />
+            </IconButton>
+          </Box>
         </Stack>
       </Box>
     </Modal>

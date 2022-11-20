@@ -102,7 +102,7 @@ export default function Post({ post }: { post: PostData }) {
       })
         .then((res) => res.json())
         .then((data) => {
-          commentContextUpdater(data);
+          commentContextUpdater({ postId: post.id, comments: data });
         });
     } else {
       commentContextUpdater(null);
