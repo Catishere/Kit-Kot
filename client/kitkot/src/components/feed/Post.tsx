@@ -19,10 +19,16 @@ import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import CommentIcon from "@mui/icons-material/Comment";
 import ShareIcon from "@mui/icons-material/Share";
 import getHeaders from "../../helper/headers";
+import {
+  useCommentSectionContextState,
+  useCommentSectionContextUpdater,
+} from "../../contexts/CommentSectionContext";
 
 export default function Post({ post }: { post: PostData }) {
   const user = useUserContextState();
   const { enqueueSnackbar } = useSnackbar();
+  const commentContextState = useCommentSectionContextState();
+  const commentContextUpdater = useCommentSectionContextUpdater();
 
   const [loading, setLoading] = useState(false);
   const [hoverLiked, setHoverLiked] = useState(false);
@@ -86,6 +92,21 @@ export default function Post({ post }: { post: PostData }) {
         console.log(err);
         setLoading(false);
       });
+  };
+
+  const toggleCommentSection = () => {
+    if (!commentContextState) {
+      fetch(`/api/post/${post.id}/comments`, {
+        method: "GET",
+        headers: getHeaders(),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          commentContextUpdater(data);
+        });
+    } else {
+      commentContextUpdater(null);
+    }
   };
 
   return (
@@ -266,7 +287,10 @@ export default function Post({ post }: { post: PostData }) {
             >
               {hoverLiked && isLiked ? <HeartBrokenIcon /> : <FavoriteIcon />}
             </IconButton>
-            <IconButton sx={{ backgroundColor: "modal.main" }}>
+            <IconButton
+              sx={{ backgroundColor: "modal.main" }}
+              onClick={() => toggleCommentSection()}
+            >
               <CommentIcon />
             </IconButton>
             <IconButton sx={{ backgroundColor: "modal.main" }}>

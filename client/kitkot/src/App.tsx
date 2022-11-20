@@ -3,6 +3,7 @@ import { alpha, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+import CommentSection from "./components/feed/CommentSection";
 import Navbar from "./components/navbar/Navbar";
 import SideBar from "./components/navbar/SideBar";
 import ColorModeContext from "./contexts/ColorModeContext";
@@ -81,6 +82,7 @@ function App() {
                   <Route path={`@:username`} element={<Profile />} />
                 </Routes>
               </Box>
+              <CommentSection />
             </BrowserRouter>
           </UserContextProvider>
         </ThemeProvider>
