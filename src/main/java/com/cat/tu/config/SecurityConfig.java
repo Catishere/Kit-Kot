@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE ,"/api/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET ,"/api/admin/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST ,"/api/content/**").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.POST ,"/api/post/**").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.POST ,"/api/comment/**").hasAnyRole("ADMIN","USER")
                 .antMatchers("*").hasAnyRole().anyRequest().permitAll()
             .and()
                 .sessionManagement()

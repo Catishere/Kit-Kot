@@ -69,21 +69,6 @@ public class PostController {
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/{postId}/comment")
-    public ResponseEntity<Post> comment(@PathVariable Long postId,
-                                        @RequestBody String comment,
-                                        @RequestHeader("Authorization") String token) {
-
-        String username = jwtUtil.validateTokenAndRetrieveSubject(token.substring("Bearer ".length()));
-
-        try {
-            postService.addComment(postId, username, comment);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @PostMapping("/{postId}/like")
     public ResponseEntity<Post> likePost(@PathVariable Long postId, @RequestHeader("Authorization") String token) {
 

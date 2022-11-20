@@ -77,14 +77,16 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public void addComment(Long id, String username, String comment) {
+    public Comment addComment(Long id, String username, String comment) {
         var post = postRepository.findPostById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found"));
         var user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        post.getComments().add(new Comment(user, post, comment));
+        var newComment = new Comment(user, post, comment);
+        post.getComments().add(newComment);
         postRepository.save(post);
+        return newComment;
     }
 
     public Optional<List<Post>> getPostsByUsername(String username) {
