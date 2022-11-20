@@ -15,10 +15,12 @@ import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
 import getHeaders from "../../helper/headers";
 import { useSnackbar } from "notistack";
+import { useUserContextState } from "../../contexts/UserContext";
 
 export default function CommentSection() {
   const commentData = useCommentSectionContextState();
   const setCommentData = useCommentSectionContextUpdater();
+  const user = useUserContextState();
   const [comment, setComment] = useState("");
   const { enqueueSnackbar } = useSnackbar();
 
@@ -47,6 +49,7 @@ export default function CommentSection() {
       })
       .catch((err) => {
         enqueueSnackbar(err.message, { variant: "error" });
+        setComment("");
       });
   };
 
@@ -81,10 +84,13 @@ export default function CommentSection() {
           >
             <TextField
               value={comment}
+              disabled={user === null}
               onChange={(e) => setComment(e.target.value)}
               sx={{ width: "100%" }}
               variant="outlined"
-              placeholder="Add comment..."
+              placeholder={
+                user ? "Add comment..." : "You need to be logged in to comment"
+              }
             />
             <IconButton
               disableRipple
