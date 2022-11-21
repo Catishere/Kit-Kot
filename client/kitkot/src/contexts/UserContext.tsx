@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import getHeaders from "../helper/headers";
+import { UserService } from "../services/UserService";
 import { UserInfo } from "../types/types.interface";
 import { ChildrenProp } from "../types/types.interface";
 
@@ -51,17 +51,7 @@ const UserContextProvider = ({ children }: ChildrenProp) => {
     if (!userJson) return;
     const userObject = JSON.parse(userJson);
     setUser(userObject);
-    fetch(`/api/user/${userObject.id}`, {
-      method: "GET",
-      headers: getHeaders(),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          throw new Error("User not found");
-        }
-      })
+    UserService.getAccount()
       .then((data) => {
         const userInfo = {
           ...data.user,

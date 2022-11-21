@@ -18,11 +18,12 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import CommentIcon from "@mui/icons-material/Comment";
 import ShareIcon from "@mui/icons-material/Share";
-import getHeaders from "../../helper/headers";
 import {
   useCommentSectionContextState,
   useCommentSectionContextUpdater,
 } from "../../contexts/CommentSectionContext";
+import { UserService } from "../../services/UserService";
+import PostService from "../../services/PostService";
 
 export default function Post({ post }: { post: PostData }) {
   const user = useUserContextState();
@@ -45,18 +46,20 @@ export default function Post({ post }: { post: PostData }) {
     (user) => user?.username === post.user?.username
   );
 
+  const showError = (err: any) => {
+    enqueueSnackbar(err.message, { variant: "error" });
+    setLoading(false);
+  };
+
   const followUser = async () => {
     if (!user)
       return enqueueSnackbar("You need to be logged in to follow users", {
         variant: "warning",
       });
+    if (!post.user) return;
     setLoading(true);
-    // remove user from following
-    fetch(`/api/user/${user?.id}/follow/${post.user?.id}`, {
-      method: "POST",
-      headers: getHeaders(),
-    })
-      .then((res) => res.json())
+    // TODO: Fix state mutation
+    UserService.followUser(post.user.id)
       .then((data) => {
         const i = user?.followingData.following.findIndex(
           (follow) => follow?.id === data.id
@@ -65,10 +68,7 @@ export default function Post({ post }: { post: PostData }) {
         else user?.followingData.following.push(data);
         setLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+      .catch(showError);
   };
 
   const likePost = async () => {
@@ -77,33 +77,23 @@ export default function Post({ post }: { post: PostData }) {
         variant: "warning",
       });
     setLoading(true);
-    fetch(`/api/post/${post.id}/like`, {
-      method: "POST",
-      headers: getHeaders(),
-    })
-      .then((res) => res.json())
+    PostService.likePost(post.id)
       .then((data) => {
         const i = user?.likedPosts.findIndex((post) => post.id === data.id);
         if (i >= 0) user?.likedPosts.splice(i, 1);
         else user?.likedPosts.push(data);
         setLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+      .catch(showError);
   };
 
   const toggleCommentSection = () => {
     if (!commentContextState) {
-      fetch(`/api/post/${post.id}/comments`, {
-        method: "GET",
-        headers: getHeaders(),
-      })
-        .then((res) => res.json())
+      PostService.getComments(post.id)
         .then((data) => {
           commentContextUpdater({ postId: post.id, comments: data });
-        });
+        })
+        .catch(showError);
     } else {
       commentContextUpdater(null);
     }

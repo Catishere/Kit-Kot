@@ -5,6 +5,7 @@ import com.cat.tu.dto.PostDTO;
 import com.cat.tu.dto.UserDataResponse;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
+import com.cat.tu.util.JWTUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final JWTUtil jwtUtil;
+
+    public UserController(UserService userService, JWTUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
@@ -39,16 +43,15 @@ public class UserController {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDataResponse> getUserById(@PathVariable Long id) {
-        if (id == null || id < 0)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return this.userService.getUserById(id)
+    @GetMapping("/self")
+    public ResponseEntity<UserDataResponse> getUserById(@RequestHeader("Authorization") String token) {
+        String username = jwtUtil.validateTokenAndRetrieveSubject(token.substring("Bearer ".length()));
+        return this.userService.getUser(username)
                 .map(user ->
-                    new ResponseEntity<>(new UserDataResponse(user,
-                            new FollowingData(user.getFollowing(), user.getFollowers()),
-                            user.getLikedPosts().stream().map((p) -> new PostDTO(p.getId())).toList()),
-                            HttpStatus.OK))
+                        new ResponseEntity<>(new UserDataResponse(user,
+                                new FollowingData(user.getFollowing(), user.getFollowers()),
+                                user.getLikedPosts().stream().map((p) -> new PostDTO(p.getId())).toList()),
+                                HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -57,10 +60,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @PostMapping("/{user_id}/follow/{followed_id}")
-    public ResponseEntity<User> followUser(@PathVariable Long user_id, @PathVariable Long followed_id) {
+    @PostMapping("/follow/{followId}")
+    public ResponseEntity<User> followUser(@PathVariable Long followId, @RequestHeader("Authorization") String token) {
+
+        String username = jwtUtil.validateTokenAndRetrieveSubject(token.substring("Bearer ".length()));
         try {
-            User user = this.userService.followUser(user_id, followed_id);
+            User user = this.userService.followUser(username, followId);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

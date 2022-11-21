@@ -1,7 +1,7 @@
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import getHeaders from "../../helper/headers";
+import { UserService } from "../../services/UserService";
 import {
   ModalProps,
   Month,
@@ -116,19 +116,14 @@ export default function SignUp({ value, changeView }: ModalProps) {
   const { enqueueSnackbar } = useSnackbar();
 
   const sendForm = async () => {
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(form),
-    });
-    const data = await response.json();
-
-    if (data.error) {
-      enqueueSnackbar(data.error, { variant: "error" });
-    } else {
-      enqueueSnackbar("Successfully registered", { variant: "success" });
-      changeView("login_email");
-    }
+    UserService.register(form)
+      .then((_data) => {
+        enqueueSnackbar("Successfully registered", { variant: "success" });
+        changeView("login_email");
+      })
+      .catch((err) => {
+        enqueueSnackbar(err.message, { variant: "error" });
+      });
   };
 
   return (

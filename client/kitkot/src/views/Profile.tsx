@@ -7,6 +7,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Video from "../components/feed/Video";
 import { useUserContextState } from "../contexts/UserContext";
+import { UserService } from "../services/UserService";
+import PostService from "../services/PostService";
 
 const UserNotFound = () => {
   return (
@@ -141,20 +143,17 @@ export function Profile() {
 
   useEffect(() => {
     if (!username) return;
-    fetch(`/api/user?` + new URLSearchParams({ username }))
-      .then((res) => res.json())
+    UserService.getUserByUsername(username)
       .then((data) => {
         const user = data.user;
         user.followingData = data.followingData;
         setUser(user);
       })
-      .catch((err) => setUser(null));
+      .catch((_err) => setUser(null));
 
-    fetch(`/api/post/user/${username}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setVideos(data);
-      });
+    PostService.getPostsByUsername(username).then((data) => {
+      setVideos(data);
+    });
 
     return () => {
       setUser(undefined);

@@ -43,8 +43,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public User followUser(Long user_id, Long followed_id) {
-        User user = userRepository.findUserById(user_id).orElseThrow(() -> new RuntimeException("User not found"));
+    public User followUser(String username, Long followed_id) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
         User followed = userRepository.findUserById(followed_id).orElseThrow(() -> new RuntimeException("User not found"));
         if (user == followed)
             throw new RuntimeException("You can't follow yourself");

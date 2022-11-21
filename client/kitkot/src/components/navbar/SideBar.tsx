@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, Typography } from "@mui/material";
 import { UserInfo } from "../../types/types.interface";
-import getHeaders from "../../helper/headers";
+import { UserService } from "../../services/UserService";
 
 const drawerWidth = 240;
 
@@ -85,11 +85,7 @@ export default function MiniDrawer() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/user/suggested", {
-      method: "GET",
-      headers: getHeaders(),
-    })
-      .then((res) => res.json())
+    UserService.getSuggested()
       .then((data) => setSuggestedUsers(data))
       .catch((err) => console.log(err));
   }, []);

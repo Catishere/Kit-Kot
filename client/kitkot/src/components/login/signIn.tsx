@@ -1,9 +1,10 @@
 import { LoadingButton } from "@mui/lab";
 import { Alert, Box, Collapse, TextField, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useUserContextUpdater } from "../../contexts/UserContext";
-import getHeaders from "../../helper/headers";
-import { FollowingData, PostData, UserInfo } from "../../types/types.interface";
+import { UserService } from "../../services/UserService";
+import { LoginResponse, UserInfo } from "../../types/types.interface";
 import { LoginFormData, ModalProps } from "../../types/types.interface";
 
 export default function SignIn({ value }: ModalProps) {
@@ -11,6 +12,8 @@ export default function SignIn({ value }: ModalProps) {
     username: "",
     password: "",
   });
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,42 +32,25 @@ export default function SignIn({ value }: ModalProps) {
 
   const sendForm = () => {
     setLoading(true);
-    fetch("/api/auth/login", {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(form),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else if (res.status === 401) {
-          setError("Invalid username or password");
-          throw new Error("Wrong credentials");
-        }
-      })
-      .then(
-        (data: {
-          jwtToken: string;
-          user: UserInfo;
-          followingData: FollowingData;
-          likedPosts: PostData[];
-        }) => {
-          const userInfo = {
-            ...data.user,
-            followingData: data.followingData,
-            likedPosts: data.likedPosts,
-          } as UserInfo;
+    UserService.login(form.username, form.password)
+      .then((data: LoginResponse) => {
+        const userInfo = {
+          ...data.user,
+          followingData: data.followingData,
+          likedPosts: data.likedPosts,
+        } as UserInfo;
 
-          if (data.jwtToken) {
-            localStorage.setItem("token", data.jwtToken);
-            localStorage.setItem("userInfo", JSON.stringify(userInfo));
-            userContextUpdater(userInfo);
-          }
-          setLoading(false);
+        if (data.jwtToken) {
+          localStorage.setItem("token", data.jwtToken);
+          localStorage.setItem("userInfo", JSON.stringify(userInfo));
+          enqueueSnackbar("Logged in successfully", { variant: "success" });
+          userContextUpdater(userInfo);
         }
-      )
+
+        setLoading(false);
+      })
       .catch((err) => {
-        console.log(err);
+        setError(err.message);
         setLoading(false);
       });
   };

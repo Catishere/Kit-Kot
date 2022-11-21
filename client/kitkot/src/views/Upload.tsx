@@ -4,12 +4,9 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import Video from "../components/feed/Video";
-import getHeaders, { getUploadHeaders } from "../helper/headers";
-import {
-  HttpStatus,
-  PostCreateData,
-  UploadFileResponse,
-} from "../types/types.interface";
+import { ContentService } from "../services/ContentService";
+import PostService from "../services/PostService";
+import { PostCreateData, UploadFileResponse } from "../types/types.interface";
 
 const EMPTY_FORM: PostCreateData = {
   content: "",
@@ -37,12 +34,7 @@ export function Upload() {
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
-    const response = await fetch("http://localhost:3000/api/content/upload", {
-      method: "POST",
-      headers: getUploadHeaders(),
-      body: formData,
-    });
-    return response.json();
+    return ContentService.uploadFile(formData);
   };
 
   const changeHandler = (event: any) => {
@@ -54,23 +46,30 @@ export function Upload() {
 
   const publish = async () => {
     setLoading(true);
-    const uploadData: UploadFileResponse = await sendImage();
+    let uploadData: UploadFileResponse;
+    try {
+      uploadData = await sendImage();
+    } catch (err) {
+      setLoading(false);
+      return enqueueSnackbar("Error uploading file", { variant: "error" });
+    }
 
     if (!selectedFile) return;
-    const response = await fetch("http://localhost:3000/api/post/", {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify({ ...form, mediaUrl: uploadData.fileDownloadUri }),
-    });
 
-    if (response.status === HttpStatus.CREATED) {
+    try {
+      await PostService.createPost({
+        ...form,
+        mediaUrl: uploadData.fileDownloadUri,
+      });
+
       setForm(EMPTY_FORM);
       setSelectedFile("");
       setPreviewUrl("");
       setTagsInput("");
       enqueueSnackbar("Post created", { variant: "success" });
-    } else {
+    } catch (err) {
       enqueueSnackbar("Post creation failed", { variant: "error" });
+      setLoading(false);
     }
     setLoading(false);
   };

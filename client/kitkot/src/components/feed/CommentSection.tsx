@@ -13,9 +13,9 @@ import {
 import { CommentElement } from "./Comment";
 import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
-import getHeaders from "../../helper/headers";
 import { useSnackbar } from "notistack";
 import { useUserContextState } from "../../contexts/UserContext";
+import PostService from "../../services/PostService";
 
 export default function CommentSection() {
   const commentData = useCommentSectionContextState();
@@ -26,20 +26,7 @@ export default function CommentSection() {
 
   const handleComment = () => {
     if (!commentData) return;
-    fetch(`/api/comment/${commentData.postId}`, {
-      method: "POST",
-      headers: getHeaders(),
-      body: comment,
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else if (res.status === 401 || res.status === 403) {
-          throw new Error("You need to be logged in to comment");
-        } else {
-          throw new Error("Something went wrong");
-        }
-      })
+    PostService.createComment(comment, commentData.postId)
       .then((data) => {
         setCommentData({
           ...commentData,

@@ -1,18 +1,14 @@
 import { Divider, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import Post from "../components/feed/Post";
-import getHeaders from "../helper/headers";
+import PostService from "../services/PostService";
 import { PostData } from "../types/types.interface";
 
 export function Home() {
   const [feed, setFeed] = useState<PostData[]>([]);
 
   useEffect(() => {
-    fetch("/api/post/trending", {
-      method: "GET",
-      headers: getHeaders(),
-    })
-      .then((res) => res.json())
+    PostService.getTrending()
       .then((data) => setFeed(data))
       .catch((err) => console.log(err));
   }, []);

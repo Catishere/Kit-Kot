@@ -99,6 +99,13 @@ export interface LoginFormData {
   password: string;
 }
 
+export interface LoginResponse {
+  jwtToken: string;
+  user: UserInfo;
+  followingData: FollowingData;
+  likedPosts: PostData[];
+}
+
 export interface UploadFileResponse {
   fileName: string;
   fileDownloadUri: string;
@@ -138,3 +145,18 @@ export interface CommentSectionData {
   postId: number;
   comments: Comment[];
 }
+
+export const statusToText = (status: HttpStatus) => {
+  switch (status) {
+    case 400:
+      return "Bad Request";
+    case 401:
+      return "You need to login in first";
+    case 403:
+      return "You don't have access to this resource";
+    case 404:
+      return "Not Found";
+    default:
+      return "Something went wrong";
+  }
+};
