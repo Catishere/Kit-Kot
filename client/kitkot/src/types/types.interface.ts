@@ -31,6 +31,7 @@ export interface PostData {
     link: string;
   };
   content: string;
+  likes: number;
   mediaUrl: string;
 }
 

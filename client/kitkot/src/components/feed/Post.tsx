@@ -85,7 +85,6 @@ export default function Post({ post }: { post: PostData }) {
       return enqueueSnackbar("You need to be logged in to like posts", {
         variant: "warning",
       });
-    setLoading(true);
     PostService.likePost(post.id)
       .then((data) => {
         const i = user?.likedPosts.findIndex((post) => post.id === data.id);
@@ -97,7 +96,6 @@ export default function Post({ post }: { post: PostData }) {
           userCopy?.likedPosts.push(data);
           setUser(userCopy);
         }
-        setLoading(false);
       })
       .catch(showError);
   };

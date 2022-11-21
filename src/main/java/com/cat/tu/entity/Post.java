@@ -45,7 +45,6 @@ public class Post {
     @Column(name="likes")
     private int likes;
 
-    @Column(name="comments")
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Comment> comments;

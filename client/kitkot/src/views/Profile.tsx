@@ -103,7 +103,7 @@ export const UserProfile = ({
         </Box>
         <Box sx={{ display: "flex" }} flexDirection={"row"} gap="5px">
           <Typography textAlign="left" fontWeight={"bold"} fontSize={16}>
-            0
+            {videos.reduce((acc, video) => acc + video.likes, 0)}
           </Typography>
           <Typography textAlign="left" fontSize={16}>
             Likes
