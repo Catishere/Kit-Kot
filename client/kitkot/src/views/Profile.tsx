@@ -23,9 +23,11 @@ const UserNotFound = () => {
 export const UserProfile = ({
   user,
   videos,
+  liked,
 }: {
   user: UserInfo | undefined;
   videos: PostData[];
+  liked: PostData[];
 }) => {
   const [tab, setTab] = useState<number>(0);
   const currentUser = useUserContextState();
@@ -130,7 +132,19 @@ export const UserProfile = ({
             );
           })}
         </TabPanel>
-        <TabPanel value="2">Liked</TabPanel>
+        <TabPanel
+          sx={{ p: 0, display: "flex", flexDirection: "row" }}
+          value="2"
+        >
+          {liked.map((video) => {
+            return (
+              <Video
+                url={video.mediaUrl}
+                size={{ height: "260px", width: "180px" }}
+              />
+            );
+          })}
+        </TabPanel>
       </TabContext>
     </Box>
   );
@@ -140,6 +154,7 @@ export function Profile() {
   let { username } = useParams();
   const [user, setUser] = useState<UserInfo | null | undefined>();
   const [videos, setVideos] = useState<PostData[]>([]);
+  const [liked, setLiked] = useState<PostData[]>([]);
 
   useEffect(() => {
     if (!username) return;
@@ -153,6 +168,10 @@ export function Profile() {
 
     PostService.getPostsByUsername(username).then((data) => {
       setVideos(data);
+    });
+
+    UserService.getLikedPostsByUsername(username).then((data) => {
+      setLiked(data);
     });
 
     return () => {
@@ -173,7 +192,7 @@ export function Profile() {
       {user === null ? (
         <UserNotFound />
       ) : (
-        <UserProfile user={user} videos={videos} />
+        <UserProfile user={user} videos={videos} liked={liked} />
       )}
     </Box>
   );

@@ -1,6 +1,7 @@
 import getHeaders from "../helper/headers";
 import {
   HttpStatus,
+  PostData,
   RegisterFormData,
   statusToText,
 } from "../types/types.interface";
@@ -67,6 +68,19 @@ export namespace UserService {
 
   export async function getUserByUsername(username: string) {
     return fetch(`/api/user?${new URLSearchParams({ username })}`, {
+      method: "GET",
+      headers: getHeaders(),
+    }).then((res) => {
+      if (res.status === HttpStatus.OK || res.status === HttpStatus.CREATED)
+        return res.json();
+      throw new Error(statusToText(res.status));
+    });
+  }
+
+  export async function getLikedPostsByUsername(
+    username: string
+  ): Promise<PostData[]> {
+    return fetch(`/api/user/${username}/liked`, {
       method: "GET",
       headers: getHeaders(),
     }).then((res) => {

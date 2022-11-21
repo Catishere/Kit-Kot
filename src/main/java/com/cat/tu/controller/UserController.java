@@ -3,12 +3,15 @@ package com.cat.tu.controller;
 import com.cat.tu.dto.FollowingData;
 import com.cat.tu.dto.PostDTO;
 import com.cat.tu.dto.UserDataResponse;
+import com.cat.tu.entity.Post;
 import com.cat.tu.entity.User;
 import com.cat.tu.service.UserService;
 import com.cat.tu.util.JWTUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api/user")
 @RestController
@@ -41,6 +44,11 @@ public class UserController {
     @GetMapping("/suggested")
     public ResponseEntity<Iterable<User>> getSuggestedUsers() {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}/liked")
+    public ResponseEntity<List<Post>> getLikedPosts(@PathVariable String username) {
+        return new ResponseEntity<>(userService.getUserLikedPosts(username), HttpStatus.OK);
     }
 
     @GetMapping("/self")

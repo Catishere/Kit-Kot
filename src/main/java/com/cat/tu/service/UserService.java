@@ -1,5 +1,6 @@
 package com.cat.tu.service;
 
+import com.cat.tu.entity.Post;
 import com.cat.tu.entity.User;
 import com.cat.tu.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -57,5 +59,11 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
         return followed;
+    }
+
+    public List<Post> getUserLikedPosts(String username) {
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getLikedPosts();
     }
 }
