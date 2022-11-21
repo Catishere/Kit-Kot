@@ -9,7 +9,10 @@ import {
 } from "@mui/material";
 import { PostData } from "../../types/types.interface";
 import Moment from "react-moment";
-import { useUserContextState } from "../../contexts/UserContext";
+import {
+  useUserContextState,
+  useUserContextUpdater,
+} from "../../contexts/UserContext";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import Video from "./Video";
@@ -27,6 +30,7 @@ import PostService from "../../services/PostService";
 
 export default function Post({ post }: { post: PostData }) {
   const user = useUserContextState();
+  const setUser = useUserContextUpdater();
   const { enqueueSnackbar } = useSnackbar();
   const commentContextState = useCommentSectionContextState();
   const commentContextUpdater = useCommentSectionContextUpdater();
@@ -58,14 +62,19 @@ export default function Post({ post }: { post: PostData }) {
       });
     if (!post.user) return;
     setLoading(true);
-    // TODO: Fix state mutation
     UserService.followUser(post.user.id)
       .then((data) => {
         const i = user?.followingData.following.findIndex(
           (follow) => follow?.id === data.id
         ) as number;
-        if (i >= 0) user?.followingData.following.splice(i, 1);
-        else user?.followingData.following.push(data);
+        const userCopy = { ...user };
+        if (i >= 0) {
+          userCopy.followingData.following.splice(i, 1);
+          setUser(userCopy);
+        } else {
+          userCopy.followingData.following.push(data);
+          setUser(userCopy);
+        }
         setLoading(false);
       })
       .catch(showError);
@@ -80,8 +89,14 @@ export default function Post({ post }: { post: PostData }) {
     PostService.likePost(post.id)
       .then((data) => {
         const i = user?.likedPosts.findIndex((post) => post.id === data.id);
-        if (i >= 0) user?.likedPosts.splice(i, 1);
-        else user?.likedPosts.push(data);
+        const userCopy = { ...user };
+        if (i >= 0) {
+          userCopy?.likedPosts.splice(i, 1);
+          setUser(userCopy);
+        } else {
+          userCopy?.likedPosts.push(data);
+          setUser(userCopy);
+        }
         setLoading(false);
       })
       .catch(showError);
