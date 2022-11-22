@@ -45,6 +45,15 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public List<User> getSuggestedUsers() {
+        return userRepository
+                .findAll()
+                .stream()
+                .sorted((u1, u2) -> u2.getFollowers().size() - u1.getFollowers().size())
+                .limit(3)
+                .toList();
+    }
+
     public User followUser(String username, Long followed_id) {
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
         User followed = userRepository.findUserById(followed_id).orElseThrow(() -> new RuntimeException("User not found"));

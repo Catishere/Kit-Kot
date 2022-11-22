@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PostData, UserInfo } from "../types/types.interface";
 import EditIcon from "@mui/icons-material/Edit";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { LoadingButton, TabContext, TabList, TabPanel } from "@mui/lab";
 import Video from "../components/feed/Video";
-import { useUserContextState } from "../contexts/UserContext";
+import {
+  useUserContextState,
+  useUserContextUpdater,
+} from "../contexts/UserContext";
 import { UserService } from "../services/UserService";
 import PostService from "../services/PostService";
+import { useSnackbar } from "notistack";
 
 const UserNotFound = () => {
   return (
@@ -30,10 +34,46 @@ export const UserProfile = ({
   liked: PostData[];
 }) => {
   const [tab, setTab] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
   const currentUser = useUserContextState();
+  const setUser = useUserContextUpdater();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
+  const isFollowed = currentUser?.followingData?.following?.some(
+    (followingUser) => followingUser?.username === user?.username
+  );
+
+  const canFollowBack = currentUser?.followingData?.followers?.some(
+    (followerUser) => followerUser?.username === user?.username
+  );
+
+  const followUser = async () => {
+    if (!currentUser)
+      return enqueueSnackbar("You need to be logged in to follow users", {
+        variant: "warning",
+      });
+    if (!user) return;
+
+    setLoading(true);
+    UserService.followUser(user.id)
+      .then((data) => {
+        const i = currentUser.followingData.following.findIndex(
+          (follow) => follow?.id === data.id
+        ) as number;
+        const userCopy = { ...currentUser };
+        if (i >= 0) {
+          userCopy.followingData.following.splice(i, 1);
+          setUser(userCopy);
+        } else {
+          userCopy.followingData.following.push(data);
+          setUser(userCopy);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        enqueueSnackbar(err.message, { variant: "error" });
+        setLoading(false);
+      });
   };
 
   return (
@@ -82,7 +122,26 @@ export const UserProfile = ({
               Edit Profile
             </Button>
           ) : (
-            <></>
+            <LoadingButton
+              loading={loading}
+              variant={isFollowed ? "outlined" : "contained"}
+              color="secondary"
+              sx={{
+                maxWidth: "fit-content",
+                textTransform: "none",
+                display: user?.id === currentUser?.id ? "none" : "flex",
+                fontSize: { xxs: 12, xs: 14 },
+              }}
+              onClick={() => followUser()}
+            >
+              <b>
+                {isFollowed
+                  ? "Unfollow"
+                  : canFollowBack
+                  ? "Follow Back"
+                  : "Follow"}
+              </b>
+            </LoadingButton>
           )}
         </Stack>
       </Box>
@@ -114,7 +173,10 @@ export const UserProfile = ({
       </Stack>
       <TabContext value={tab.toString()}>
         <Box sx={{ borderBottom: 1, borderColor: "divider", width: "460px" }}>
-          <TabList onChange={handleChange} aria-label="profile-tabs">
+          <TabList
+            onChange={(_e, newValue: number) => setTab(newValue)}
+            aria-label="profile-tabs"
+          >
             <Tab label="Videos" value="1" sx={{ width: "50%" }} />
             <Tab label="Liked" value="2" sx={{ width: "50%" }} />
           </TabList>

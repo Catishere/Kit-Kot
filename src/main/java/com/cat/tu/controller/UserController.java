@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/suggested")
     public ResponseEntity<Iterable<User>> getSuggestedUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getSuggestedUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{username}/liked")

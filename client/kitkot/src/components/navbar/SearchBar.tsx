@@ -82,6 +82,7 @@ export default function SearchBar() {
         disablePortal
         open={isOpen}
         id="autocomplete-search"
+        autoComplete={false}
         options={results}
         autoHighlight
         sx={{ width: 300 }}
