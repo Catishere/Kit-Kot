@@ -4,6 +4,7 @@ import {
   PostData,
   RegisterFormData,
   statusToText,
+  UserInfo,
 } from "../types/types.interface";
 
 export namespace UserService {
@@ -81,6 +82,17 @@ export namespace UserService {
     username: string
   ): Promise<PostData[]> {
     return fetch(`/api/user/${username}/liked`, {
+      method: "GET",
+      headers: getHeaders(),
+    }).then((res) => {
+      if (res.status === HttpStatus.OK || res.status === HttpStatus.CREATED)
+        return res.json();
+      throw new Error(statusToText(res.status));
+    });
+  }
+
+  export async function searchUsers(username: string): Promise<UserInfo[]> {
+    return fetch(`/api/user/search?${new URLSearchParams({ username })}`, {
       method: "GET",
       headers: getHeaders(),
     }).then((res) => {
