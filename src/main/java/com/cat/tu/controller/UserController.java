@@ -89,4 +89,9 @@ public class UserController {
                     new ResponseEntity<>(new FollowingData(value.getFollowing(), value.getFollowers()), HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Iterable<User>> searchUsers(@RequestParam String username) {
+        return new ResponseEntity<>(userService.searchUsers(username), HttpStatus.OK);
+    }
 }

@@ -24,4 +24,6 @@ public interface UserRepository extends  CrudRepository<User, Long> {
     Optional<User> findUserById(Long id);
 
     User getOne(Long id);
+
+    Iterable<User> findUsersByUsernameContaining(String username);
 }

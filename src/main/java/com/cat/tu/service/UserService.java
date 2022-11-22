@@ -66,4 +66,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new RuntimeException("User not found"))
                 .getLikedPosts();
     }
+
+
+    public Iterable<User> searchUsers(String username) {
+        return userRepository.findUsersByUsernameContaining(username);
+    }
 }
