@@ -20,6 +20,7 @@ export default function Video({ url, size }: { url: string; size?: any }) {
       display="flex"
       alignSelf={{ xxs: "center", sm: "flex-start" }}
       height={size ? size.height : { xxs: "auto", xs: "475px" }}
+      minWidth={size ? size.minWidth : "auto"}
       width={size ? size.width : { xxs: "100%", xs: "300px" }}
       padding={{ xxs: "0px", xs: "10px" }}
     >

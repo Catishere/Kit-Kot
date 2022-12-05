@@ -41,6 +41,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [settings, setSettings] = useState([] as MenuOptions[]);
+  const [modalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const colorMode = React.useContext(ColorModeContext);
 
@@ -59,6 +60,14 @@ export default function Navbar() {
           onClick: () => {
             navigate(`/@${user.username}`);
           },
+        },
+        {
+          key: "Upload",
+          icon: AddIcon,
+          onClick: () => {
+            navigate("/upload");
+          },
+          show: { xxs: "flex", xs: "none" },
         },
         {
           key: "Settings",
@@ -97,6 +106,11 @@ export default function Navbar() {
             />
           ),
           keep: true,
+        },
+        {
+          key: "Log in",
+          show: { xxs: "flex", xs: "none" },
+          onClick: () => setModalOpen(true),
         },
       ]);
     }
@@ -142,6 +156,10 @@ export default function Navbar() {
         settings={settings}
         state={{ state: open, setState: setOpen }}
       />
+
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <LoginModalContent onClose={() => setModalOpen(false)} />
+      </Modal>
     </AppBar>
   );
 }
@@ -181,6 +199,7 @@ const DropDownMenu = ({
         <MenuItem
           disabled={setting.disabled}
           key={setting.key}
+          sx={{ display: setting.show ? setting.show : "flex" }}
           onClick={
             setting.keep
               ? undefined

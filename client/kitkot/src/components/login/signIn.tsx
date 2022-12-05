@@ -7,7 +7,7 @@ import { UserService } from "../../services/UserService";
 import { LoginResponse, UserInfo } from "../../types/types.interface";
 import { LoginFormData, ModalProps } from "../../types/types.interface";
 
-export default function SignIn({ value }: ModalProps) {
+export default function SignIn({ value, onClose }: ModalProps) {
   const [form, setForm] = useState<LoginFormData>({
     username: "",
     password: "",
@@ -47,6 +47,7 @@ export default function SignIn({ value }: ModalProps) {
           userContextUpdater(userInfo);
         }
 
+        if (onClose) onClose();
         setLoading(false);
       })
       .catch((err) => {

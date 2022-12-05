@@ -85,7 +85,7 @@ export default function SearchBar() {
         autoComplete={false}
         options={results}
         autoHighlight
-        sx={{ width: 300 }}
+        sx={{ width: { sm: 200, md: 300 } }}
         inputValue={searchValue}
         noOptionsText="Loading..."
         getOptionLabel={(option) => option?.username || ""}

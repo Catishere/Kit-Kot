@@ -188,7 +188,12 @@ export default function Post({ post }: { post: PostData }) {
               </Typography>
             </Box>
             <Typography textAlign="left" fontSize={{ xxs: 12, sm: 14 }}>
-              <Moment fromNow>{post.date}</Moment>
+              <Moment
+                subtract={{ minutes: new Date(post.date).getTimezoneOffset() }}
+                fromNow
+              >
+                {post.date}
+              </Moment>
             </Typography>
             <Typography fontSize={12} fontWeight={"bold"} textAlign="left">
               {post.tags.map((tag) => (
@@ -268,6 +273,7 @@ export default function Post({ post }: { post: PostData }) {
           width="100%"
           direction="row"
           justifyContent="flex-start"
+          gap="5px"
         >
           <Video url={post.mediaUrl}></Video>
           <Stack

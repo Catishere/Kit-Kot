@@ -13,6 +13,7 @@ export interface MenuOptions {
   content?: React.ReactNode;
   disabled?: boolean;
   keep?: boolean;
+  show?: any;
   onClick?: () => void;
 }
 
@@ -53,6 +54,7 @@ export type UserInfo = {
 export interface ModalProps {
   value: string;
   changeView: (value: string) => void;
+  onClose?: () => void;
 }
 
 export interface OnClose {

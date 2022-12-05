@@ -89,16 +89,24 @@ export const UserProfile = ({
         {user ? (
           <Avatar
             src={user?.photoURL}
-            sx={{ width: 116, height: 116 }}
+            sx={{ width: { xs: 64, sm: 116 }, height: { xs: 64, sm: 116 } }}
             alt={user?.displayName}
           />
         ) : (
-          <Skeleton variant="circular" width={116} height={116} />
+          <Skeleton variant="circular">
+            <Avatar
+              sx={{ width: { xs: 64, sm: 116 }, height: { xs: 64, sm: 116 } }}
+            />
+          </Skeleton>
         )}
 
         <Stack gap={"5px"} sx={{ display: "flex" }}>
           {user ? (
-            <Typography textAlign="left" fontWeight={"bold"} variant="h4">
+            <Typography
+              textAlign="left"
+              fontWeight={"bold"}
+              fontSize={{ xs: 18, sm: 25 }}
+            >
               {user?.username}
             </Typography>
           ) : (
@@ -145,7 +153,7 @@ export const UserProfile = ({
           )}
         </Stack>
       </Box>
-      <Stack direction="row" gap={"15px"}>
+      <Stack direction="row" gap={"15px"} flexWrap="wrap">
         <Box sx={{ display: "flex" }} flexDirection={"row"} gap="5px">
           <Typography textAlign="left" fontWeight={"bold"} fontSize={16}>
             {user ? user.followingData.following.length : 0}
@@ -172,7 +180,13 @@ export const UserProfile = ({
         </Box>
       </Stack>
       <TabContext value={tab.toString()}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider", width: "460px" }}>
+        <Box
+          sx={{
+            borderBottom: 1,
+            borderColor: "divider",
+            width: { xs: "100%", sm: "460px" },
+          }}
+        >
           <TabList
             onChange={(_e, newValue: number) => setTab(newValue)}
             aria-label="profile-tabs"
@@ -182,27 +196,39 @@ export const UserProfile = ({
           </TabList>
         </Box>
         <TabPanel
-          sx={{ p: 0, display: "flex", flexDirection: "row" }}
+          sx={{
+            p: 0,
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "10px",
+          }}
           value="1"
         >
           {videos.map((video) => {
             return (
               <Video
                 url={video.mediaUrl}
-                size={{ height: "260px", width: "180px" }}
+                size={{ height: "260px", width: "180px", minWidth: "100px" }}
               />
             );
           })}
         </TabPanel>
         <TabPanel
-          sx={{ p: 0, display: "flex", flexDirection: "row" }}
+          sx={{
+            p: 0,
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "10px",
+          }}
           value="2"
         >
           {liked.map((video) => {
             return (
               <Video
                 url={video.mediaUrl}
-                size={{ height: "260px", width: "180px" }}
+                size={{ height: "260px", width: "180px", minWidth: "100px" }}
               />
             );
           })}

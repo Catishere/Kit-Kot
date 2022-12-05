@@ -69,7 +69,7 @@ export default function LoginModalContent({ onClose }: OnClose) {
           value={"select_register"}
           changeView={setView}
         />
-        <SignIn value={"login_email"} changeView={setView} />
+        <SignIn value={"login_email"} changeView={setView} onClose={onClose} />
         <SignUp value={"register_email"} changeView={setView} />
         <Loading value={"loading"} changeView={setView} />
       </Switch>
